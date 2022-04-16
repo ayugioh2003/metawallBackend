@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/ayugioh2003/metawallBackend/issues"
   },
-  "homepage": "https://github.com/ayugioh2003/metawallBackend#readme"
+  "homepage": "https://github.com/ayugioh2003/metawallBackend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
 }

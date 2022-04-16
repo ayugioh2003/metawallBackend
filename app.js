@@ -2,7 +2,7 @@
 const {
   getPostUrl,
   createPostUrl,
-} = require('./router/index')
+} = require('./router/post')
 // Controller
 const { getPost, createPost } = require('./controller/post')
 
