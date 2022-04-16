@@ -19,7 +19,7 @@ const PostSchema = new Schema({
     type: Date,
     default: Date.now()
   }
-}, { versionKey: false })
+}, { versionKey: false, timestamps: true })
 
 const Post = model('Post', PostSchema)
 
