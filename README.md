@@ -16,12 +16,32 @@
 </div>
 
 ## 🛖 About This Project
-此為 NFT 會員制的動態牆，僅有限量 VIP 可以加入討論，在 NFT 合約上，有限制永久只有 500 位會員參與此平台。此為六角 Nodejs 第二週小組任務：Node.js NPM 整合 MongoDB
+此為 NFT 會員制的動態牆，僅有限量 VIP 可以加入討論，在 NFT 合約上，有限制永久只有 500 位會員參與此平台。此為六角 Nodejs 第二週小組任務
 
 功能面
 * 功能一：取得貼文列表 API
 * 功能二：新增貼文 API
 
+## 🔨 後端規格
+- URL：http://localhost:3005
+
+### Post Collection
+- Collection: Post
+- 時間資料庫存的形式以 Timestamp 為主
+- 取得文章列表 API
+  - GET: http://localhost:3005/posts
+- 新增貼文 API
+  - POST: http://localhost:3005/posts
+  ``` js
+  {
+    // 發文者名稱 [必填]
+     userName : string,
+     // 發文內容 [必填]
+     userContent: string,
+     // 使用者圖片 [選填]
+     userPhoto : string
+  }
+  ```
 
 ## 🔨 Built With
 此專案會用到的 Framework / Library 或工具
@@ -40,12 +60,18 @@
   ```sh
     git clone git@github.com:ayugioh2003/metawallBackend.git
   ```
-3. Install NPM packages
+2. Install NPM packages
   ```
   cd metawallBackend
   npm install
   ```
+3. Copy .env.example to .env
+  ```
+  cp .env.example .env
+  填上小組共用的 DATABASE、DATABASE_PASSWORD
+  ```
 4. Start Runing Server
+  使用 Nodemon，存檔後會立即更新程式碼，不需重啟 nodejs
   ```
   npm run dev
   ```
