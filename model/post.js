@@ -6,20 +6,30 @@ const PostSchema = new Schema({
     type: String,
     required: [true, '發文者姓名為必填']
   },
+
   // 發文內容
   userContent: {
     type: String,
     required: [true, '內容為必填']
   },
+
   // 使用者圖片
   userPhoto: {
     type: String,
   },
+
+  // 建立時間，轉為 Timestamp 以方便前端好處理
   createdAt: {
-    type: Date,
-    default: Date.now()
+    type: Number,
+    default: new Date().getTime()
+  },
+
+  // 更新時間，轉為 Timestamp 以方便前端好處理
+  updatedAt: {
+    type: Number,
+    default: new Date().getTime()
   }
-}, { versionKey: false, timestamps: true })
+}, { versionKey: false })
 
 const Post = model('Post', PostSchema)
 
