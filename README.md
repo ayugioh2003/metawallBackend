@@ -24,6 +24,7 @@
 
 ## 🔨 後端規格
 - URL：http://localhost:3005
+- 本地開發資料庫：mongodb://localhost:27017/metawall
 
 ### Post Collection
 - Collection: Post

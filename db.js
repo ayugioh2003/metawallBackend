@@ -1,10 +1,14 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
 
+// 遠端資料庫
 const DB = process.env.DATABASE.replace(
   '<password>',
   process.env.DATABASE_PASSWORD
 )
+
+// 連接本地資料庫
+const localDB = process.env.DATABASE_LOCAL
 
 const connectDB = async () => {
   try {
