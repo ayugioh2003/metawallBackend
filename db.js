@@ -1,4 +1,3 @@
-const { connect } = require('http2')
 const mongoose = require('mongoose')
 require('dotenv').config()
 
@@ -16,4 +15,4 @@ const connectDB = async () => {
   }
 }
 
-module.exports = connect
+module.exports = connectDB
