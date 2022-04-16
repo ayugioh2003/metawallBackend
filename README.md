@@ -19,10 +19,8 @@
 此為 NFT 會員制的動態牆，僅有限量 VIP 可以加入討論，在 NFT 合約上，有限制永久只有 500 位會員參與此平台。此為六角 Nodejs 第二週小組任務：Node.js NPM 整合 MongoDB
 
 功能面
-* Create：建立 Post 貼文
-* Read：閱讀 Post 貼文
-* Edit：編輯 Post 貼文
-* Delete：刪除 Post 貼文
+* 功能一：取得貼文列表 API
+* 功能二：新增貼文 API
 
 
 ## 🔨 Built With
