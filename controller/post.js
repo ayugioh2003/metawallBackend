@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Model
 import Post from '../model/post.js'
 // Utils
@@ -21,5 +22,5 @@ const createPost = async (req, res) => {
 
 export {
   getPost,
-  createPost
+  createPost,
 }

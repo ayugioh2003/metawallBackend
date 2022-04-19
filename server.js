@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import http from 'http'
 import app from './app.js'
 import connectDB from './db.js'

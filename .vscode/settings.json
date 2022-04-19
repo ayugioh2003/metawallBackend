@@ -1,10 +1,8 @@
 {
   // eslint 自動格式化、修復
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
+    "source.fixAll.eslint": true
   },
-  "eslint.validate": [
-    "javascript",
-  ],
+  "eslint.validate": ["javascript"],
   "editor.tabSize": 2,
 }
