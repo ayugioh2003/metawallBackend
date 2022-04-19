@@ -3,6 +3,7 @@
   "description": "<div align=\"center\">   <a href=\"https://github.com/ayugioh2003/metawallBackend\">     <img src=\"./logo.png\" alt=\"Logo\" width=\"80\" height=\"80\">   </a>",
   "version": "1.0.0",
   "main": "app.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ayugioh2003/metawallBackend.git"

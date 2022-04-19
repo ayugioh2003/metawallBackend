@@ -1,10 +1,11 @@
 // Router
-const {
+import {
   getPostUrl,
   createPostUrl,
-} = require('./router/post')
+} from './router/post.js'
 // Controller
-const { getPost, createPost } = require('./controller/post')
+import { getPost, createPost } from './controller/post.js'
+
 
 const app = async (req, res) => {
 
@@ -13,4 +14,4 @@ const app = async (req, res) => {
   else errorHandle({ res })
 }
 
-module.exports = app
+export default app

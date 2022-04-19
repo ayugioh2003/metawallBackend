@@ -1,11 +1,11 @@
 // Model
-const Post = require('../model/post')
+import Post from '../model/post.js'
 // Utils
-const {
+import {
   successHandle,
   errorHandle,
-} = require('../utils/resHandle')
-const { handleBuffer } = require('../utils/index')
+} from '../utils/resHandle.js'
+import { handleBuffer } from '../utils/index.js'
 
 // 取得文章列表 API
 const getPost = async (req, res) => {
@@ -19,7 +19,7 @@ const createPost = async (req, res) => {
   successHandle({ res, message: '新增成功' })
 }
 
-module.exports = {
+export {
   getPost,
   createPost
 }

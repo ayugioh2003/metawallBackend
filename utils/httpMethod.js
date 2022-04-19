@@ -10,7 +10,7 @@ const deleteMethod = ({ method }) => method === 'DELETE'
 const patchMethod = ({ method }) => method === 'PATCH'
 const optionsMethod = ({ method }) => method === 'OPTIONS'
 
-module.exports = {
+export {
   deleteMethod,
   getMethod,
   postMethod,

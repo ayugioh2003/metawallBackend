@@ -1,6 +1,6 @@
-const http = require('http')
-const app = require('./app')
-const connectDB = require('./db')
+import http from 'http'
+import app from './app.js'
+import connectDB from './db.js'
 
 const PORT = process.env.PORT || 3005
 

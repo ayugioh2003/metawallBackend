@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-require('dotenv').config()
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+dotenv.config()
 
 // 遠端資料庫
 const DB = process.env.DATABASE.replace(
@@ -19,4 +20,4 @@ const connectDB = async () => {
   }
 }
 
-module.exports = connectDB
+export default connectDB

@@ -1,6 +1,6 @@
-const { Schema, model } = require('mongoose')
+import mongoose from 'mongoose'
 
-const PostSchema = new Schema({
+const PostSchema = new mongoose.Schema({
   // 發文者名稱
   userName: {
     type: String,
@@ -31,6 +31,6 @@ const PostSchema = new Schema({
   }
 }, { versionKey: false })
 
-const Post = model('Post', PostSchema)
+const Post = mongoose.model('Post', PostSchema)
 
-module.exports = Post
+export default Post

@@ -36,7 +36,7 @@ const errorHandle = ({
   }))
 }
 
-module.exports = {
+export {
   successHandle,
   errorHandle
 }
