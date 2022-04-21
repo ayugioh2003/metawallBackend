@@ -1,11 +1,12 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 // 遠端資料庫
 const DB = process.env.DATABASE.replace(
   '<password>',
-  process.env.DATABASE_PASSWORD
+  process.env.DATABASE_PASSWORD,
 )
 
 // 連接本地資料庫
