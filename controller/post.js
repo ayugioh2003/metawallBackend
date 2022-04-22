@@ -16,8 +16,14 @@ const getPost = async (req, res) => {
 
 // 新增貼文 API
 const createPost = async (req, res) => {
-  // TODO: POST : 建立貼文API
-  successHandle({ res, message: '新增成功' })
+  try {
+    const postData = await handleBuffer(req)
+    const data = await Post.create({ ...postData })
+
+    successHandle({ res, message: '新增成功', data })
+  } catch (error) {
+    errorHandle({ res, ...error })
+  }
 }
 
 export {
