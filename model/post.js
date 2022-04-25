@@ -34,7 +34,6 @@ const PostSchema = new mongoose.Schema(
   { versionKey: false },
 )
 
-// const Post = mongoose.model('Post', PostSchema)
-const Post = mongoose.model('testposts', PostSchema)
+const Post = mongoose.model('Post', PostSchema)
 
 export default Post

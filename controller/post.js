@@ -12,16 +12,16 @@ const getPost = async (req, res) => {
   const urlParser = url.parse(req.url).query
   const queryStr = querystring.parse(urlParser)
   const queryObj = {
-    name: queryStr.q || '',
-    pageNum: queryStr.n || 1,
-    pageSize: queryStr.s || 0,
-    sort: queryStr.sort,
+    keyword: queryStr.q || '', // 要搜尋的關鍵字
+    pageNum: queryStr.n || 1, // 第幾頁
+    pageSize: queryStr.s || 0, // 一頁要幾個資料；若沒設定則回傳全部
+    sort: queryStr.sort, // 排序 ['oldest', 'latest']
   }
-  // 這邊暫定針對名字去做搜尋與排序
-  const data = await Post.find(queryObj.name === '' ? {} : { userName: queryObj.name })
+  // 這邊暫定針對貼文內容去做搜尋與排序
+  const data = await Post.find({ userContent: { $regex: queryObj.keyword } })
     .skip((queryObj.pageNum - 1) * queryObj.pageSize)
     .limit(queryObj.pageSize)
-    .sort((queryObj.sort === 'oldest') ? { userName: -1 } : { userName: 1 })
+    .sort((queryObj.sort === 'oldest') ? { createdAt: 1 } : { createdAt: -1 })
   successHandle({ res, data })
 }
 

@@ -4,9 +4,7 @@
  * @param {String} {url}
  * @returns {String}
  */
-const filterUrlId = ({ url }) => {
-  return [...url.split('/')].pop()
-}
+const filterUrlId = ({ url }) => [...url.split('/')].pop()
 
 /**
  * 請求 Body 處理
@@ -22,7 +20,6 @@ const handleBuffer = async (req) => {
       buffers.push(chunk)
     }
     return JSON.parse(Buffer.concat(buffers).toString())
-
   } catch (error) {
     throw error
   }
@@ -30,5 +27,5 @@ const handleBuffer = async (req) => {
 
 export {
   filterUrlId,
-  handleBuffer
+  handleBuffer,
 }
