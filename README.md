@@ -11,7 +11,7 @@
     <br />
     <a href="https://github.com/ayugioh2003/metawallBackend/issues">Report Bug</a>
     ·
-    <a href="#">Demo</a>
+    <a href="https://metawall-backend.vercel.app">Demo</a>
   </p>
 </div>
 
@@ -23,7 +23,9 @@
 * 功能二：新增貼文 API
 
 ## 🔨 後端規格
-- URL：http://localhost:3005
+- URL
+  - 遠端：metawall-backend.vercel.app
+  - 本地端：http://localhost:3005
 - 本地開發資料庫：mongodb://localhost:27017/metawall
 
 ### Post Collection
