@@ -27,8 +27,22 @@ const getPost = async (req, res) => {
 
 // 新增貼文 API
 const createPost = async (req, res) => {
-  // TODO: POST : 建立貼文API
-  successHandle({ res, message: '新增成功' })
+  try {
+    const postData = await handleBuffer(req)
+    const {
+      userName, userContent, userPhoto, otherData,
+    } = postData
+    const data = await Post.create({
+      userName, userContent, userPhoto, ...otherData,
+    })
+
+    successHandle({ res, message: '新增成功', data })
+  } catch (error) {
+    // eslint-disable-next-line no-prototype-builtins
+    const hasErrorsKey = Object.prototype.hasOwnProperty.call(error, 'errors')
+
+    errorHandle({ res, errors: hasErrorsKey ? error.errors : error.message })
+  }
 }
 
 export { getPost, createPost }
