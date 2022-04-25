@@ -15,5 +15,5 @@ export {
   getMethod,
   postMethod,
   patchMethod,
-  optionsMethod
+  optionsMethod,
 }
