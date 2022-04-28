@@ -2,7 +2,8 @@ const headers = {
   'Content-Type': 'application/json',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept',
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET POST OPTIONS DELETE PATCH',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PATCH',
+  'Access-Control-Allow-Credentials': true,
 }
 
 const successHandle = ({
@@ -38,4 +39,5 @@ const errorHandle = ({
 export {
   successHandle,
   errorHandle,
+  headers,
 }
