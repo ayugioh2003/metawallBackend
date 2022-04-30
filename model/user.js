@@ -2,9 +2,9 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 
 /**
- * 後端負責人 灰塵貓
  * User Model
- */
+ * 用戶管理模組
+*/
 
 const UserSchema = new mongoose.Schema({
   // 暱稱

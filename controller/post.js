@@ -7,7 +7,12 @@ const catchAsync = require('../utils/catchAsync')
 const { successHandle } = require('../utils/resHandle.js')
 
 // 取得文章列表 API
+/*
+  取得貼文列表 GET /posts?user_id
+  取得用戶按讚貼文 GET /posts?like_user_id
+  */
 const getPost = catchAsync(async (req, res) => {
+  // TODO: 需多新增 取得用戶按讚貼文 GET /posts?like_user_id
   const queryStr = req.query
 
   const queryObj = {
@@ -27,7 +32,6 @@ const getPost = catchAsync(async (req, res) => {
 
 // 新增貼文 API
 const createPost = catchAsync(async (req, res, next) => {
-
   const {
     userName, userContent, userPhoto, otherData,
   } = req.body
@@ -39,19 +43,19 @@ const createPost = catchAsync(async (req, res, next) => {
   successHandle({ res, message: '新增成功', data })
 })
 
-// 取得單一貼文	PATCH	/posts/:post_id
+// 取得單一貼文 PATCH /posts/:post_id
 const getSinglePost = catchAsync(async (req, res, next) => {
   // TODO: 取得單一貼文 API
-  successHandle({ res, message: 'getSinglePost', data })
+  successHandle({ res, message: 'getSinglePost' })
 })
 
-// 修改單一貼文	PATCH	/posts/:post_id
+// 修改單一貼文 PATCH /posts/:post_id
 const updateSinglePost = catchAsync(async (req, res, next) => {
   // TODO: 修改單一貼文 API
   successHandle({ res, message: 'updateSinglePost', data })
 })
 
-// 刪除單一貼文	DELETE	/posts/:post_id
+// 刪除單一貼文 DELETE /posts/:post_id
 const deleteSinglePost = catchAsync(async (req, res, next) => {
   // TODO: 刪除單一貼文 API
   successHandle({ res, message: 'deleteSinglePost', data })
@@ -62,5 +66,5 @@ module.exports = {
   createPost,
   getSinglePost,
   updateSinglePost,
-  deleteSinglePost
+  deleteSinglePost,
 }
