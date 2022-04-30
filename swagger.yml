@@ -1,0 +1,325 @@
+swagger: "2.0"
+info:
+  description: "Metawall API 文件"
+  version: "1.0.0"
+  title: "Metawall Swagger"
+host: "https://metawall-backend.vercel.app"
+basePath: ""
+tags:
+- name: "post"
+  description: "貼文相關 API"
+  externalDocs:
+    description: "更多文件"
+    url: "https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "auth"
+  description: "Auth 登入權限相關模組"
+  externalDocs:
+    description: "更多文件"
+    url: "https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "user"
+  description: "User 相關模組"
+  externalDocs:
+    description: "更多文件"
+    url: "https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "comments"
+  description: "Comments 留言相關模組"
+  externalDocs:
+    description: "更多文件"
+    url: https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "likes"
+  description: "Likes 貼文按讚相關模組"
+  externalDocs:
+    description: "更多文件"
+    url: https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "followings"
+  description: "followings 追蹤名單相關模組"
+  externalDocs:
+    description: "更多文件"
+    url: https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "upload"
+  description: "upload 上傳檔案模組"
+  externalDocs:
+    description: "更多文件"
+    url: https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+- name: "products"
+  description: "products 商品相關模組"
+  externalDocs:
+    description: "更多文件"
+    url: https://hackmd.io/@ayugioh2003/Skv3dUtS5"
+
+schemes:
+- "https"
+
+paths:
+  /login:
+    post:
+      tags:
+      - "auth"
+      summary: "登入"
+      description: "使用者登入"
+      parameters:
+      - name: "user_id"
+        description: "使用者的ID為必填"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+  /signup:
+    post:
+      tags:
+      - "auth"
+      summary: "註冊"
+      description: "使用者註冊"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+  /logout:
+    post:
+      tags:
+      - "auth"
+      summary: "使用者登出"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+
+  
+  /current-userinfo:
+    get:
+      tags:
+      - "user"
+      summary: "取得目前資訊"
+      description: "取得目前資訊"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+    patch:
+      tags:
+      - "user"
+      summary: "修改個人資訊"
+      description: "修改個人資訊"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+  /reset-password:
+    patch:
+      tags:
+      - "auth"
+      - "user"
+      summary: "修改密碼"
+      description: "修改密碼"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+  /users:
+    get:
+      tags:
+      - "user"
+      summary: "取得用戶列表"
+      description: "取得用戶列表"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+  /users/{user_id}:
+    get:
+      tags:
+      - "user"
+      summary: "取得個人資訊"
+      description: "取得個人資訊"
+      parameters:
+      - name: "user_id"
+        description: "使用者的ID為必填"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+    post:
+      tags:
+      - "user"
+      summary: "新增個人資訊"
+      description: "新增個人資訊"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+
+    patch:
+      tags:
+      - "user"
+      summary: "修改個人資訊"
+      description: "修改個人資訊"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+
+    delete:
+      tags:
+      - "user"
+      summary: "刪除個人資訊"
+      description: "刪除個人資訊"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/User"
+
+  /posts:
+    post:
+      tags:
+      - "post"
+      summary: "建立貼文"
+      description: "建立貼文"
+      parameters:
+        - name: "userContent"
+          description: "發文內容為必填"
+          required: true
+          type: "string"
+          format: "string"
+          
+        - name: "userName"
+          description: "發文者姓名為必填"
+          required: false
+          type: "string"
+          format: "string"
+
+        - name: "userPhoto"
+          description: "使用者圖片"
+          required: false
+          type: "string"
+          format: "string"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+
+  /posts?{user_id}:
+    get:
+      tags:
+      - "post"
+      summary: "取得貼文列表"
+      description: "取得使用者的貼文列表"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+      
+  /posts/{post_id}:
+    get:
+      tags:
+      - "post"
+      summary: "取得單一貼文"
+      description: "取得單一貼文"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+    patch:
+      tags:
+      - "post"
+      summary: "修改單一貼文"
+      description: "修改單一貼文"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+      
+    delete:
+      tags:
+      - "post"
+      summary: "刪除單一貼文"
+      description: "刪除單一貼文"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Post"
+
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Post:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "string"
+      userName:
+        type: "string"
+        format: "string"
+      userContent:
+        type: "string"
+        format: "int32"
+    xml:
+      name: "Order"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "User"
+  ApiResponse:
+    type: "object"
+    properties:
+      status:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      data:
+        type: "object"

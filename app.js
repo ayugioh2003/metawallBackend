@@ -11,6 +11,19 @@ const globalErrorHandler = require('./controller/globalError.js')
 const AppError = require('./utils/appError.js')
 const ApiState = require('./utils/apiState.js')
 
+// Swagger
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs')
+const swaggerDocument = YAML.load('./swagger.yml')
+const cssOptions = require('./utils/swagger')
+
+// API Document
+app.use(
+  '/apidoc',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, cssOptions)
+);
+
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cors())
