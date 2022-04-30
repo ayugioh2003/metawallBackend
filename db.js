@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 const mongoose = require('mongoose')
-const dotenv = require('dotenv')
-
-dotenv.config()
 
 // 遠端資料庫
 const DB = process.env.DATABASE.replace(
