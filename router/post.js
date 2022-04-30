@@ -1,13 +1,11 @@
-import {
-  getMethod,
-  postMethod,
-} from '../utils/httpMethod.js'
+const express = require('express')
 
-const getPostUrl = async (req) => (req.url === '/posts' || req.url.startsWith('/posts?')) && getMethod(req)
+const router = express.Router()
+const postController = require('../controller/post.js')
 
-const createPostUrl = async (req) => req.url === '/posts' && postMethod(req)
+router
+  .route('/')
+  .get(postController.getPost)
+  .post(postController.createPost)
 
-export {
-  getPostUrl,
-  createPostUrl,
-}
+module.exports = router

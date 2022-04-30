@@ -1,5 +1,7 @@
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
 
 dotenv.config()
 
@@ -21,4 +23,4 @@ const connectDB = async () => {
   }
 }
 
-export default connectDB
+module.exports = connectDB

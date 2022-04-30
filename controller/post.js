@@ -1,16 +1,12 @@
-import url from 'url'
-import querystring from 'querystring'
-/* eslint-disable no-unused-vars */
 // Model
-import Post from '../model/post.js'
+const Post = require('../model/post.js')
 // Utils
-import { successHandle, errorHandle } from '../utils/resHandle.js'
-import { handleBuffer } from '../utils/index.js'
+const { successHandle, errorHandle } = require('../utils/resHandle.js')
+
 // 取得文章列表 API
 const getPost = async (req, res) => {
-  // TODO: GET : 取得文章列表 API
-  const urlParser = url.parse(req.url).query
-  const queryStr = querystring.parse(urlParser)
+  const queryStr = req.query
+
   const queryObj = {
     keyword: queryStr.q || '', // 要搜尋的關鍵字
     pageNum: queryStr.n || 1, // 第幾頁
@@ -28,10 +24,10 @@ const getPost = async (req, res) => {
 // 新增貼文 API
 const createPost = async (req, res) => {
   try {
-    const postData = await handleBuffer(req)
     const {
       userName, userContent, userPhoto, otherData,
-    } = postData
+    } = req.body
+
     const data = await Post.create({
       userName, userContent, userPhoto, ...otherData,
     })
@@ -45,4 +41,7 @@ const createPost = async (req, res) => {
   }
 }
 
-export { getPost, createPost }
+module.exports = {
+  getPost,
+  createPost
+}

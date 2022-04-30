@@ -1,19 +1,24 @@
+const express = require('express')
+const morgan = require('morgan')
+
+const app = express()
+const cors = require('cors')
 // Router
-import {
-  getPostUrl,
-  createPostUrl,
-} from './router/post.js'
-// Controller
-import { getPost, createPost } from './controller/post.js'
-import { errorHandle, headers } from './utils/resHandle.js'
+const postRouter = require('./router/post.js')
 
-const app = async (req, res) => {
-  if (await getPostUrl(req)) getPost(req, res)
-  else if (await createPostUrl(req)) createPost(req, res)
-  else if (req.method === 'OPTIONS') {
-    res.writeHead(200, headers)
-    res.end()
-  } else errorHandle({ res })
-}
+app.use(morgan('dev'))
+app.use(express.json())
+app.use(cors())
 
-export default app
+// Router
+app.use('/posts', postRouter)
+
+// 無此路由
+// app.use('*', (req, res, next) => {
+
+// })
+
+// 處理錯誤
+// app.use(globalErrorHandler)
+
+module.exports = app

@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import http from 'http'
-import app from './app.js'
-import connectDB from './db.js'
+const app = require('./app.js')
+const connectDB = require('./db.js')
 
 const PORT = process.env.PORT || 3005
 
@@ -9,7 +8,6 @@ const PORT = process.env.PORT || 3005
 connectDB()
 
 // 啟動 Server
-const server = http.createServer(app)
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running at localhost:${PORT}`)
 })

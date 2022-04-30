@@ -25,7 +25,7 @@ const handleBuffer = async (req) => {
   }
 }
 
-export {
+module.exports = {
   filterUrlId,
   handleBuffer,
 }
