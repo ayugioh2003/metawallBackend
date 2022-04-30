@@ -16,6 +16,8 @@ const authRouter = require('./router/auth.js')
 const commentRouter = require('./router/comment.js')
 const likeRouter = require('./router/like.js')
 const followingRouter = require('./router/following.js')
+const paymentRouter = require('./router/payment.js')
+const orderRouter = require('./router/order.js')
 
 // Controller
 const globalErrorHandler = require('./controller/globalError.js')
@@ -44,6 +46,8 @@ app.use('/users', userRouter)
 app.use('/comments', commentRouter)
 app.use('/likes', likeRouter)
 app.use('/followings', followingRouter)
+app.use('/payment', paymentRouter)
+app.use('/orders', orderRouter)
 
 // 無此路由
 app.use('*', (req, res, next) => {
