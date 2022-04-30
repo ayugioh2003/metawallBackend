@@ -6,6 +6,7 @@ const cors = require('cors')
 const postRouter = require('./router/post.js')
 const userRouter = require('./router/user.js')
 const authRouter = require('./router/auth.js')
+const commentRouter = require('./router/comment.js')
 // Controller
 const globalErrorHandler = require('./controller/globalError.js')
 const AppError = require('./utils/appError.js')
@@ -32,6 +33,7 @@ app.use(cors())
 app.use('/', authRouter)
 app.use('/posts', postRouter)
 app.use('/users', userRouter)
+app.use('/comments', commentRouter)
 
 // 無此路由
 app.use('*', (req, res, next) => {

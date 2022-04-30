@@ -276,6 +276,49 @@ paths:
           schema:
             $ref: "#/definitions/Post"
 
+  /comments?post_id={post_id}:
+    get:
+      tags:
+      - "comments"
+      summary: "取得貼文留言"
+      description: "取得貼文留言"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Comment"
+  /comments:
+    post:
+      tags:
+      - "comments"
+      summary: "新增留言"
+      description: "新增留言"
+      responses:
+        "200":
+        description: "操作成功"
+        schema:
+          $ref: "#/definitions/Comment"
+    patch:
+      tags:
+      - "comments"
+      summary: "修改留言"
+      description: "修改留言"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Comment"
+    delete:
+      tags:
+      - "comments"
+      summary: "刪除留言"
+      description: "刪除留言"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/Comment"
+
 securityDefinitions:
   petstore_auth:
     type: "oauth2"
@@ -310,6 +353,16 @@ definitions:
         type: "integer"
         format: "int64"
       name:
+        type: "string"
+    xml:
+      name: "User"
+  Comment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      content:
         type: "string"
     xml:
       name: "User"
