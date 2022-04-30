@@ -22,7 +22,6 @@ const sendErrorDev = (err, res) => {
     error: err.customError || err.errors,
     stack: err.stack
   })
-
 }
 
 const sendErrorProd = (err, res) => {
@@ -55,8 +54,8 @@ module.exports = (err, req, res, next) => {
   if (err instanceof TypeError) setError(ApiState.TypeError, err)
   if (err.name === 'ValidationError') error = handleValidationErrorDB(err)
   else
-    err.message = isDev ?
-      err.message || customeMessage.message
+    err.message = isDev
+      ? err.message
       : customeMessage.message
 
   // Dev 環境給詳細 Log

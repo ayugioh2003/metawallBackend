@@ -17,7 +17,6 @@ const { successHandle } = require('../utils/resHandle.js')
   登入功能	POST	/login
 */
 const login = catchAsync(async (req, res, next) => {
-  console.log('login')
   successHandle({ res, message: '登入成功' })
 })
 
