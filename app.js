@@ -18,6 +18,7 @@ const likeRouter = require('./router/like.js')
 const followingRouter = require('./router/following.js')
 const paymentRouter = require('./router/payment.js')
 const orderRouter = require('./router/order.js')
+const uploadRouter = require('./router/upload.js')
 
 // Controller
 const globalErrorHandler = require('./controller/globalError.js')
@@ -48,6 +49,7 @@ app.use('/likes', likeRouter)
 app.use('/followings', followingRouter)
 app.use('/payment', paymentRouter)
 app.use('/orders', orderRouter)
+app.use('/upload', uploadRouter)
 
 // 無此路由
 app.use('*', (req, res, next) => {
