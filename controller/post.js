@@ -1,10 +1,13 @@
 // Model
 const Post = require('../model/post.js')
+const ApiState = require('../utils/apiState.js')
+const AppError = require('../utils/appError.js')
 // Utils
-const { successHandle, errorHandle } = require('../utils/resHandle.js')
+const catchAsync = require('../utils/catchAsync')
+const { successHandle } = require('../utils/resHandle.js')
 
 // 取得文章列表 API
-const getPost = async (req, res) => {
+const getPost = catchAsync(async (req, res) => {
   const queryStr = req.query
 
   const queryObj = {
@@ -18,30 +21,46 @@ const getPost = async (req, res) => {
     .skip((queryObj.pageNum - 1) * queryObj.pageSize)
     .limit(queryObj.pageSize)
     .sort((queryObj.sort === 'oldest') ? { createdAt: 1 } : { createdAt: -1 })
+
   successHandle({ res, data })
-}
+})
 
 // 新增貼文 API
-const createPost = async (req, res) => {
-  try {
-    const {
-      userName, userContent, userPhoto, otherData,
-    } = req.body
+const createPost = catchAsync(async (req, res, next) => {
 
-    const data = await Post.create({
-      userName, userContent, userPhoto, ...otherData,
-    })
+  const {
+    userName, userContent, userPhoto, otherData,
+  } = req.body
 
-    successHandle({ res, message: '新增成功', data })
-  } catch (error) {
-    // eslint-disable-next-line no-prototype-builtins
-    const hasErrorsKey = Object.prototype.hasOwnProperty.call(error, 'errors')
+  const data = await Post.create({
+    userName, userContent, userPhoto, ...otherData,
+  })
 
-    errorHandle({ res, errors: hasErrorsKey ? error.errors : error.message })
-  }
-}
+  successHandle({ res, message: '新增成功', data })
+})
+
+// 取得單一貼文	PATCH	/posts/:post_id
+const getSinglePost = catchAsync(async (req, res, next) => {
+  // TODO: 取得單一貼文 API
+  successHandle({ res, message: 'getSinglePost', data })
+})
+
+// 修改單一貼文	PATCH	/posts/:post_id
+const updateSinglePost = catchAsync(async (req, res, next) => {
+  // TODO: 修改單一貼文 API
+  successHandle({ res, message: 'updateSinglePost', data })
+})
+
+// 刪除單一貼文	DELETE	/posts/:post_id
+const deleteSinglePost = catchAsync(async (req, res, next) => {
+  // TODO: 刪除單一貼文 API
+  successHandle({ res, message: 'deleteSinglePost', data })
+})
 
 module.exports = {
   getPost,
-  createPost
+  createPost,
+  getSinglePost,
+  updateSinglePost,
+  deleteSinglePost
 }
