@@ -231,12 +231,19 @@ paths:
           schema:
             $ref: "#/definitions/Post"
 
-  /posts?{user_id}:
+  /posts/{user_id}:
     get:
       tags:
       - "post"
       summary: "取得貼文列表"
       description: "取得使用者的貼文列表"
+      parameters:
+        - in: query
+          name: user_id
+          schema:
+            type: integer
+          required: true
+          description: 網址列傳 user_id 以取得使用者的貼文列表資料
       responses:
         "200":
           description: "操作成功"
@@ -249,6 +256,13 @@ paths:
       - "post"
       summary: "取得單一貼文"
       description: "取得單一貼文"
+      parameters:
+        - in: query
+          name: post_id
+          schema:
+            type: integer
+          required: true
+          description: 網址列傳 post_id 以取得單一貼文的資料
       responses:
         "200":
           description: "操作成功"
