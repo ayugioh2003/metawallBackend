@@ -14,9 +14,4 @@ router.post('/logout', authController.logout)
 // 修改密碼
 router.post('/reset-password', authController.resetPassword)
 
-router
-  .route('/current-userinfo')
-  .get(userController.getCurrentUserInfo) // 取得個人資訊
-  .patch(userController.updateCurrentUserInfo) // 修改個人資訊
-
 module.exports = router

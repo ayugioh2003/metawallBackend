@@ -14,5 +14,10 @@ router
   .patch(userController.updateUserInfo) // 修改個人資訊
   .delete(userController.deleteUserInfo) // 刪除個人資訊
 
+router
+  .route('/current-userinfo')
+  .get(userController.getCurrentUserInfo) // 取得個人資訊
+  .patch(userController.updateCurrentUserInfo) // 修改個人資訊
+
 
 module.exports = router
