@@ -11,5 +11,6 @@ connectDB()
 
 // 啟動 Server
 app.listen(PORT, () => {
-  console.log(`Server is running at localhost:${PORT}`)
+  console.log(`Server is running at http://localhost:${PORT}`)
+  console.log(`Swagger API Url http://localhost:${PORT}/apidoc`)
 })
