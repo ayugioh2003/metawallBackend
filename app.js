@@ -4,6 +4,7 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const path = require('path')
 
 // Utils
 const corsOptions = require('./utils/cors.js')
@@ -26,7 +27,8 @@ const AppError = require('./utils/appError.js')
 const ApiState = require('./utils/apiState.js')
 
 // Swagger
-const swaggerDocument = YAML.load('./swagger.yml')
+const swaggerPath = path.resolve(__dirname, './swagger.yml')
+const swaggerDocument = YAML.load(swaggerPath)
 const cssOptions = require('./utils/swagger.js')
 
 // API Document
