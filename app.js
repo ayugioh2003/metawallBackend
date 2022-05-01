@@ -43,15 +43,15 @@ app.use(express.json())
 app.use(cors(corsOptions))
 
 // Router
-app.use('/', authRouter)
-app.use('/posts', postRouter)
-app.use('/users', userRouter)
-app.use('/comments', commentRouter)
-app.use('/likes', likeRouter)
-app.use('/followings', followingRouter)
-app.use('/payment', paymentRouter)
-app.use('/orders', orderRouter)
-app.use('/upload', uploadRouter)
+app.use('/api', authRouter)
+app.use('/api/posts', postRouter)
+app.use('/api/users', userRouter)
+app.use('/api/comments', commentRouter)
+app.use('/api/likes', likeRouter)
+app.use('/api/followings', followingRouter)
+app.use('/api/payment', paymentRouter)
+app.use('/api/orders', orderRouter)
+app.use('/api/upload', uploadRouter)
 
 // 無此路由
 app.use('*', (req, res, next) => {
