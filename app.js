@@ -43,7 +43,7 @@ app.use(express.json())
 app.use(cors(corsOptions))
 
 // Router
-app.use('/api', authRouter)
+app.use('/api/auth', authRouter)
 app.use('/api/posts', postRouter)
 app.use('/api/users', userRouter)
 app.use('/api/comments', commentRouter)
