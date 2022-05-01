@@ -58,6 +58,7 @@ paths:
       summary: "登入"
       description: "使用者登入"
       parameters:
+      - in: path
       - name: "user_id"
         description: "使用者的ID為必填"
         required: true
