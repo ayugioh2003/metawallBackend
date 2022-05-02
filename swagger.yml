@@ -109,7 +109,7 @@ paths:
             $ref: "#/definitions/Post"
 
   
-  /current-userinfo:
+  /users/current-userinfo:
     get:
       tags:
       - "user"
@@ -160,7 +160,8 @@ paths:
       summary: "取得個人資訊"
       description: "取得個人資訊"
       parameters:
-      - name: "user_id"
+      - in: query
+        name: "user_id"
         description: "使用者的ID為必填"
         required: true
         type: "integer"
@@ -175,6 +176,13 @@ paths:
       - "user"
       summary: "新增個人資訊"
       description: "新增個人資訊"
+      parameters:
+      - in: query
+        name: "user_id"
+        description: "使用者的ID為必填"
+        required: true
+        type: "integer"
+        format: "int64"
       responses:
         "200":
           description: "操作成功"
@@ -186,6 +194,13 @@ paths:
       - "user"
       summary: "修改個人資訊"
       description: "修改個人資訊"
+      parameters:
+      - in: query
+        name: "user_id"
+        description: "使用者的ID為必填"
+        required: true
+        type: "integer"
+        format: "int64"
       responses:
         "200":
           description: "操作成功"
@@ -197,6 +212,13 @@ paths:
       - "user"
       summary: "刪除個人資訊"
       description: "刪除個人資訊"
+      parameters:
+      - in: query
+        name: "user_id"
+        description: "使用者的ID為必填"
+        required: true
+        type: "integer"
+        format: "int64"
       responses:
         "200":
           description: "操作成功"
@@ -231,12 +253,10 @@ paths:
       summary: "取得貼文列表"
       description: "取得使用者的貼文列表"
       parameters:
-        - in: query
-          name: user_id
-          schema:
-            type: integer
-          required: true
-          description: 網址列傳 user_id 以取得使用者的貼文列表資料
+      - in: query
+        name: "user_id"
+        description: "網址列傳 user_id 以取得使用者的貼文列表資料"
+        required: true
       responses:
         "200":
           description: "操作成功"
