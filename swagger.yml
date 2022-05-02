@@ -146,24 +146,18 @@ paths:
     get:
       tags:
       - "user"
-      summary: "取得用戶列表"
-      description: "取得用戶列表"
+      summary: "取得用戶列表，取得個人資訊"
+      description: "取得用戶列表、取得個人資訊"
       responses:
         "200":
           description: "操作成功"
           schema:
             $ref: "#/definitions/User"
-  /users/{user_id}:
-    get:
-      tags:
-      - "user"
-      summary: "取得個人資訊"
-      description: "取得個人資訊"
       parameters:
-      - in: query
+      - in: path
         name: "user_id"
         description: "使用者的ID為必填"
-        required: true
+        required: false
         type: "integer"
         format: "int64"
       responses:
@@ -180,7 +174,7 @@ paths:
       - in: query
         name: "user_id"
         description: "使用者的ID為必填"
-        required: true
+        required: false
         type: "integer"
         format: "int64"
       responses:
@@ -197,8 +191,7 @@ paths:
       parameters:
       - in: query
         name: "user_id"
-        description: "使用者的ID為必填"
-        required: true
+        description: "使用者的ID"
         type: "integer"
         format: "int64"
       responses:
