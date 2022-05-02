@@ -36,6 +36,8 @@ const createPost = catchAsync(async (req, res, next) => {
     userName, userContent, userPhoto, otherData,
   } = req.body
 
+  // if (!userName || !userContent) return next(new AppError(ApiState.FIELD_MISSING))
+
   const data = await Post.create({
     userName, userContent, userPhoto, ...otherData,
   })
@@ -52,13 +54,13 @@ const getSinglePost = catchAsync(async (req, res, next) => {
 // 修改單一貼文 PATCH /posts/:post_id
 const updateSinglePost = catchAsync(async (req, res, next) => {
   // TODO: 修改單一貼文 API
-  successHandle({ res, message: 'updateSinglePost', data })
+  successHandle({ res, message: 'updateSinglePost' })
 })
 
 // 刪除單一貼文 DELETE /posts/:post_id
 const deleteSinglePost = catchAsync(async (req, res, next) => {
   // TODO: 刪除單一貼文 API
-  successHandle({ res, message: 'deleteSinglePost', data })
+  successHandle({ res, message: 'deleteSinglePost' })
 })
 
 module.exports = {
