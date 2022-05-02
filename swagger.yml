@@ -1,10 +1,14 @@
-swagger: "2.0"
+openapi: 3.0.3
+
 info:
   description: "Metawall API 文件"
   version: "1.0.0"
   title: "Metawall Swagger"
-host: "https://metawall-backend.vercel.app"
-basePath: ""
+servers: 
+  - url: http://localhost:3005/api
+    description: 本地開發環境
+  - url: https://metawall-backend.vercel.app/api
+    description: 正式環境，使用真實資料
 tags:
 - name: "post"
   description: "貼文相關 API"
@@ -46,9 +50,6 @@ tags:
   externalDocs:
     description: "更多文件"
     url: https://hackmd.io/@ayugioh2003/Skv3dUtS5"
-
-schemes:
-- "https"
 
 paths:
   /login:
@@ -208,24 +209,15 @@ paths:
       - "post"
       summary: "建立貼文"
       description: "建立貼文"
-      parameters:
-        - name: "userContent"
-          description: "發文內容為必填"
-          required: true
-          type: "string"
-          format: "string"
-          
-        - name: "userName"
-          description: "發文者姓名為必填"
-          required: false
-          type: "string"
-          format: "string"
-
-        - name: "userPhoto"
-          description: "使用者圖片"
-          required: false
-          type: "string"
-          format: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/definitions/Post"
+              required:
+                - userName
+                - userContent
       responses:
         "200":
           description: "操作成功"
