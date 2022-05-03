@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import http from 'http'
-import app from './app.js'
-import connectDB from './db.js'
+const app = require('./app.js')
+const dotenv = require('dotenv')
+dotenv.config({ path: './.env' })
+const connectDB = require('./db.js')
 
 const PORT = process.env.PORT || 3005
 
@@ -9,7 +10,7 @@ const PORT = process.env.PORT || 3005
 connectDB()
 
 // 啟動 Server
-const server = http.createServer(app)
-server.listen(PORT, () => {
-  console.log(`Server is running at localhost:${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`)
+  console.log(`Swagger API Url http://localhost:${PORT}/apidoc`)
 })

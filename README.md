@@ -12,6 +12,8 @@
     <a href="https://github.com/ayugioh2003/metawallBackend/issues">Report Bug</a>
     ·
     <a href="https://metawall-backend.vercel.app">Demo</a>
+    ·
+    <a href="https://metawall-backend.vercel.app/apidoc">API 文件</a>
   </p>
 </div>
 
@@ -24,7 +26,7 @@
 
 ## 🔨 後端規格
 - URL
-  - 遠端：metawall-backend.vercel.app
+  - 遠端：https://metawall-backend.vercel.app
   - 本地端：http://localhost:3005
 - 本地開發資料庫：mongodb://localhost:27017/metawall
 

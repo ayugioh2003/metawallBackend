@@ -1,7 +1,6 @@
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-
-dotenv.config()
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
+const mongoose = require('mongoose')
 
 // 遠端資料庫
 const DB = process.env.DATABASE.replace(
@@ -21,4 +20,4 @@ const connectDB = async () => {
   }
 }
 
-export default connectDB
+module.exports = connectDB
