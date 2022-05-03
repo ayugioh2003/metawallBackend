@@ -26,7 +26,7 @@
 
 ## 🔨 後端規格
 - URL
-  - 遠端：https://metawall-backend.vercel.app
+  - 遠端：https://metawall-backend.vercel.app、https://metawall-5.herokuapp.com/
   - 本地端：http://localhost:3005
 - 本地開發資料庫：mongodb://localhost:27017/metawall
 
