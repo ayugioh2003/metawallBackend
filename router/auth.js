@@ -12,6 +12,6 @@ router.post('/signup', authController.signup)
 // 登出
 router.post('/logout', authController.logout)
 // 修改密碼
-router.post('/reset-password', authController.resetPassword)
+router.patch('/reset-password', authController.resetPassword)
 
 module.exports = router
