@@ -31,22 +31,11 @@ const login = catchAsync(async (req, res, next) => {
       password: memberData.password,
     }).exec((err, findRes) => {
       if (err) {
-        return successHandle({
-          res,
-          status: false,
-          statusCode: 404,
-          message: '登入失敗',
-          data: new AppError(apiState.INTERNAL_SERVER_ERROR).message,
-        });
+        return next(new AppError(apiState.INTERNAL_SERVER_ERROR));
       }
+      // find沒找到東西的res是null
       if (findRes === null) {
-        return successHandle({
-          res,
-          status: false,
-          statusCode: 404,
-          message: '登入失敗',
-          data: new AppError(apiState.DATA_NOT_EXIST).message,
-        });
+        return next(new AppError(apiState.DATA_NOT_EXIST));
       } else {
         const token = jwt.sign(
           {
@@ -74,13 +63,7 @@ const login = catchAsync(async (req, res, next) => {
       }
     });
   } catch (error) {
-    return successHandle({
-      res,
-      status: false,
-      statusCode: 404,
-      message: '登入失敗',
-      data: new AppError(apiState.SYNTAX_ERROR).message,
-    });
+    return next(new AppError(apiState.SYNTAX_ERROR));
   }
 });
 
@@ -97,44 +80,21 @@ const signup = catchAsync(async (req, res, next) => {
     if (checkEmail(req.body.email)) {
       User.findOne({ email: memberData.email }).exec((err, res) => {
         if (err) {
-          return successHandle({
-            res,
-            status: false,
-            statusCode: 404,
-            message: '註冊失敗',
-            data: new AppError(apiState.INTERNAL_SERVER_ERROR).message,
-          });
+          return next(new AppError(apiState.INTERNAL_SERVER_ERROR));
         }
       });
       try {
         const data = await User.create(memberData);
         return successHandle({ res, message: '註冊成功', data });
       } catch (error) {
-        return successHandle({
-          res,
-          status: false,
-          statusCode: 404,
-          message: '註冊失敗',
-          data: new AppError(apiState.DATA_EXIST).message,
-        });
+        // 帳號已存在
+        return next(new AppError(apiState.DATA_EXIST));
       }
     } else {
-      return successHandle({
-        res,
-        status: false,
-        statusCode: 404,
-        message: '註冊失敗',
-        data: new AppError(apiState.FIELD_MISSING).message,
-      });
+      return next(new AppError(apiState.FIELD_MISSING));
     }
   } catch (error) {
-    return successHandle({
-      res,
-      status: false,
-      statusCode: 404,
-      message: '註冊失敗',
-      data: new AppError(apiState.SYNTAX_ERROR).message,
-    });
+    return next(new AppError(apiState.SYNTAX_ERROR));
   }
 });
 
@@ -171,71 +131,20 @@ const resetPassword = catchAsync(async (req, res, next) => {
           new: true,
         }).exec((updateErr, updateRes) => {
           if (updateErr) {
-            return successHandle({
-              res,
-              status: false,
-              statusCode: 404,
-              message: '更新失敗 無此會員',
-              data: new AppError(apiState.DATA_NOT_EXIST).message,
-            });
+            return next(new AppError(apiState.DATA_NOT_EXIST));
           }
           return successHandle({ res, message: '更新成功', data: updateRes });
         });
-        // User.findOne({ email: memberData.email }).exec((findErr, findRes) => {
-        //   if (findErr) {
-        //     return successHandle({
-        //       res,
-        //       status: false,
-        //       statusCode: 404,
-        //       message: '更新失敗',
-        //       data: new AppError(apiState.INTERNAL_SERVER_ERROR).message,
-        //     });
-        //   }
-        //   if (findRes === null) {
-        //     User.updateOne({ _id: memberData.id }, memberData, {
-        //       new: true,
-        //     }).exec((updateErr, updateRes) => {
-        //       if (updateErr) {
-        //         return successHandle({
-        //           res,
-        //           status: false,
-        //           statusCode: 404,
-        //           message: '更新失敗 無此會員',
-        //           data: new AppError(apiState.DATA_NOT_EXIST).message,
-        //         });
-        //       }
-        //       return successHandle({ res, message: '更新成功', data: updateRes });
-        //     });
-        //   }
-        // });
       } else {
-        return successHandle({
-          res,
-          status: false,
-          statusCode: 404,
-          message: '更新失敗 信箱格式錯誤',
-          data: new AppError(apiState.FIELD_MISSING).message,
-        });
+        return next(new AppError(apiState.DATA_NOT_EXIST));
       }
     }
     // 如果不是現在登入的帳號
     else {
-      return successHandle({
-        res,
-        status: false,
-        statusCode: 404,
-        message: '更新失敗 帳號登入錯誤',
-        data: new AppError(apiState.DATA_NOT_EXIST).message,
-      });
+      return next(new AppError(apiState.DATA_NOT_EXIST));
     }
   } catch (error) {
-    return successHandle({
-      res,
-      status: false,
-      statusCode: 404,
-      message: '更新失敗 token錯誤 請重新登入',
-      data: new AppError(apiState.DATA_NOT_EXIST).message,
-    });
+    return next(new AppError(apiState.DATA_NOT_EXIST));
   }
 });
 
