@@ -21,50 +21,51 @@ const jwt = require('jsonwebtoken');
   登入功能	POST	/login
 */
 const login = catchAsync(async (req, res, next) => {
-  try {
-    const memberData = {
-      email: req.body.email,
-      password: hashPassword(req.body.password),
-    };
-    User.findOne({
-      email: memberData.email,
-      password: memberData.password,
-    }).exec((err, findRes) => {
-      if (err) {
-        return next(new AppError(ApiState.INTERNAL_SERVER_ERROR));
-      }
-      // find沒找到東西的res是null
-      if (findRes === null) {
-        return next(new AppError(ApiState.DATA_NOT_EXIST));
-      } else {
-        const token = jwt.sign(
-          {
-            // 加密方式
-            algorithm: 'HS256',
-            // 多久之後到期 60一分鐘到期 60*60一小時 也可以不用exp直接在secret後面加上{ expiresIn: '1h' }
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
-            // data的內容可以在登入解密出來
-            data: findRes._id,
-          },
-          // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
-          // 驗證的時候要用一樣的字串去解 不然會算不出原本的資料
-          'secret'
-        );
-        res.setHeader('token', token);
-        findRes.token = token;
-        return successHandle({
-          res,
-          message: '登入成功',
-          data: {
-            user: findRes,
-            token: findRes.token,
-          },
-        });
-      }
-    });
-  } catch (error) {
-    return next(new AppError(ApiState.SYNTAX_ERROR));
-  }
+  const memberData = {
+    email: req.body.email,
+    password: hashPassword(req.body.password),
+  };
+
+  User.findOne({
+    email: memberData.email,
+    password: memberData.password,
+  }).exec((err, findRes) => {
+    if (err) {
+      return next(new AppError(ApiState.INTERNAL_SERVER_ERROR.message, ApiState.statusCode));
+    }
+
+    // find 沒找到東西的 res 是 null
+    if (findRes === null) {
+      return next(new AppError(ApiState.LOGIN_FAILED.message, ApiState.LOGIN_FAILED.statusCode));
+    } else {
+      const token = jwt.sign(
+        {
+          // 加密方式
+          algorithm: 'HS256',
+          // 多久之後到期 60一分鐘到期 60*60一小時 也可以不用exp直接在secret後面加上{ expiresIn: '1h' }
+          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          // data的內容可以在登入解密出來
+          data: findRes._id,
+        },
+        // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
+        // 驗證的時候要用一樣的字串去解 不然會算不出原本的資料
+        'secret'
+      );
+
+      res.setHeader('token', token);
+      findRes.token = token;
+
+      return successHandle({
+        res,
+        message: '登入成功',
+        data: {
+          user: findRes,
+          token: findRes.token,
+        },
+      });
+    }
+  });
+
 });
 
 /*

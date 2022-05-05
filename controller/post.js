@@ -36,8 +36,6 @@ const createPost = catchAsync(async (req, res, next) => {
     userName, userContent, userPhoto, otherData,
   } = req.body
 
-  // if (!userName || !userContent) return next(new AppError(ApiState.FIELD_MISSING))
-
   const data = await Post.create({
     userName, userContent, userPhoto, ...otherData,
   })
