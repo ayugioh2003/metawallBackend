@@ -8,7 +8,7 @@ const ApiState = require('../utils/apiState')
 
 /*
   res 回傳錯誤範例
-  return next(new AppError(ApiState.FIELD_MISSING))
+  return next(new AppError(ApiState.FIELD_MISSING.message, ApiState.FIELD_MISSING.statusCode))
 
   ApiState.js 可自行新增需要的錯誤內容
 */
@@ -26,12 +26,12 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
 
 /* 取得個人資訊 GET	/users/:user_id */
 const getUserInfo = catchAsync(async (req, res, next) => {
-  return next(new AppError(ApiState.FIELD_MISSING))
+  return next(new AppError(ApiState.FIELD_MISSING.message, ApiState.FIELD_MISSING.statusCode))
 })
 
 /* 取得用戶列表	GET	/users */
 const getUserList = catchAsync(async (req, res, next) => {
-  return next(new AppError(ApiState.FIELD_MISSING))
+  return next(new AppError(ApiState.FIELD_MISSING.message, ApiState.FIELD_MISSING.statusCode))
 })
 
 /* 新增個人資訊 POST /users/:user_id */

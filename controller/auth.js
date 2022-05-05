@@ -12,9 +12,9 @@ const jwt = require('jsonwebtoken');
 
 /*
   res 回傳錯誤範例
-  return next(new AppError(ApiState.FIELD_MISSING))
+  return next(new AppError(apiState.FIELD_MISSING))
 
-  ApiState.js 可自行新增需要的錯誤內容
+  apiState.js 可自行新增需要的錯誤內容
 */
 
 /*

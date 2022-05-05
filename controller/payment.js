@@ -6,7 +6,7 @@ const { successHandle } = require('../utils/resHandle.js')
 
 /*
   res 回傳錯誤範例
-  return next(new AppError(ApiState.FIELD_MISSING))
+  return next(new AppError(ApiState.FIELD_MISSING.message, ApiState.FIELD_MISSING.statusCode))
 
   ApiState.js 可自行新增需要的錯誤內容
 */
