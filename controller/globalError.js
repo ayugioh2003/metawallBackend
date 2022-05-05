@@ -14,10 +14,9 @@ const handleValidationErrorDB = (err) => {
 const sendErrorDev = (err, res) => {
   // console 顯示錯誤訊息
   console.log(err.stack)
-
   // Dev 環境會特別顯示 Error 印出詳細錯誤訊息
   res.status(err.statusCode).json({
-    status: err.status,
+    status: err.statusCode,
     message: err.message,
     error: err.customError || err.errors,
     stack: err.stack
@@ -26,7 +25,7 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   res.status(err.statusCode).json({
-    status: err.status,
+    status: err.statusCode,
     message: err.message,
     error: err.customError
   })

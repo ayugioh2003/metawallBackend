@@ -3,7 +3,7 @@ class AppError extends Error {
     super(message)
 
     this.stack = ''
-    this.statusCode = statusCode // Http 狀態碼
+    this.statusCode = statusCode || 500 // Http 狀態碼
     this.message = message // 錯誤訊息
     /*
     `Error.captureStackTrace` 函數
