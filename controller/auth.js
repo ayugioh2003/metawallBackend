@@ -3,7 +3,7 @@ const User = require('../model/user');
 // Utils
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const apiState = require('../utils/apiState');
+const ApiState = require('../utils/ApiState');
 const { successHandle } = require('../utils/resHandle.js');
 const { verifyToken, checkEmail } = require('../utils/verification');
 const { hashPassword } = require('../utils/hash');
@@ -12,9 +12,9 @@ const jwt = require('jsonwebtoken');
 
 /*
   res 回傳錯誤範例
-  return next(new AppError(apiState.FIELD_MISSING))
+  return next(new AppError(ApiState.FIELD_MISSING.message, ApiState.FIELD_MISSING.statusCode))
 
-  apiState.js 可自行新增需要的錯誤內容
+  ApiState.js 可自行新增需要的錯誤內容
 */
 
 /*
@@ -31,11 +31,11 @@ const login = catchAsync(async (req, res, next) => {
       password: memberData.password,
     }).exec((err, findRes) => {
       if (err) {
-        return next(new AppError(apiState.INTERNAL_SERVER_ERROR));
+        return next(new AppError(ApiState.INTERNAL_SERVER_ERROR));
       }
       // find沒找到東西的res是null
       if (findRes === null) {
-        return next(new AppError(apiState.DATA_NOT_EXIST));
+        return next(new AppError(ApiState.DATA_NOT_EXIST));
       } else {
         const token = jwt.sign(
           {
@@ -63,7 +63,7 @@ const login = catchAsync(async (req, res, next) => {
       }
     });
   } catch (error) {
-    return next(new AppError(apiState.SYNTAX_ERROR));
+    return next(new AppError(ApiState.SYNTAX_ERROR));
   }
 });
 
@@ -80,7 +80,7 @@ const signup = catchAsync(async (req, res, next) => {
     if (checkEmail(req.body.email)) {
       User.findOne({ email: memberData.email }).exec((err, res) => {
         if (err) {
-          return next(new AppError(apiState.INTERNAL_SERVER_ERROR));
+          return next(new AppError(ApiState.INTERNAL_SERVER_ERROR));
         }
       });
       try {
@@ -88,13 +88,13 @@ const signup = catchAsync(async (req, res, next) => {
         return successHandle({ res, message: '註冊成功', data });
       } catch (error) {
         // 帳號已存在
-        return next(new AppError(apiState.DATA_EXIST));
+        return next(new AppError(ApiState.DATA_EXIST));
       }
     } else {
-      return next(new AppError(apiState.FIELD_MISSING));
+      return next(new AppError(ApiState.FIELD_MISSING));
     }
   } catch (error) {
-    return next(new AppError(apiState.SYNTAX_ERROR));
+    return next(new AppError(ApiState.SYNTAX_ERROR));
   }
 });
 
@@ -131,20 +131,20 @@ const resetPassword = catchAsync(async (req, res, next) => {
           new: true,
         }).exec((updateErr, updateRes) => {
           if (updateErr) {
-            return next(new AppError(apiState.DATA_NOT_EXIST));
+            return next(new AppError(ApiState.DATA_NOT_EXIST));
           }
           return successHandle({ res, message: '更新成功', data: updateRes });
         });
       } else {
-        return next(new AppError(apiState.DATA_NOT_EXIST));
+        return next(new AppError(ApiState.DATA_NOT_EXIST));
       }
     }
     // 如果不是現在登入的帳號
     else {
-      return next(new AppError(apiState.DATA_NOT_EXIST));
+      return next(new AppError(ApiState.DATA_NOT_EXIST));
     }
   } catch (error) {
-    return next(new AppError(apiState.DATA_NOT_EXIST));
+    return next(new AppError(ApiState.DATA_NOT_EXIST));
   }
 });
 
