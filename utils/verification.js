@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const AppError = require('./appError');
 
 // 驗證token是否到期
 function verifyToken(token) {
@@ -12,7 +13,6 @@ function verifyToken(token) {
     if (token) {
       // secret字串要跟token加密的字串一樣 最好是寫在 env 檔裡面
       jwt.verify(token, 'secret', (error, decoded) => {
-        //   console.log(decoded);
         if (error) {
           result = false;
           resolve(result);
@@ -24,9 +24,8 @@ function verifyToken(token) {
           resolve(result);
         }
       });
-    }else{
-      result = '找不到token'
-      reject(result);
+    } else {
+      reject(new AppError('找不到 Token', 400));
     }
   });
 }
