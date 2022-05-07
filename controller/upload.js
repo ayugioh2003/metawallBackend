@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 // Model
-// const Image = require('../model/image')
+const Image = require('../model/image')
 // Utils
 const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
@@ -17,8 +17,21 @@ const { successHandle } = require('../utils/resHandle.js')
   取得圖片列表 GET /upload/images
 */
 const getUpload = catchAsync(async (req, res, next) => {
-  // TODO: 根據有給 query，做取得訂單列表 / 取得 User 訂單
-  successHandle({ res, message: 'getUpload' })
+  const queryStr = req.query
+
+  const queryObj = {
+    pageNum: queryStr.n || 1, // 第幾頁
+    pageSize: queryStr.s || 0, // 一頁要幾個資料；若沒設定則回傳全部
+    sort: queryStr.sort, // 排序 ['oldest', 'latest']
+  }
+
+  const data = await Image.find()
+    .skip((queryObj.pageNum - 1) * queryObj.pageSize)
+    .limit(queryObj.pageSize)
+    .sort(queryObj.sort === 'oldest' ? { createdAt: 1 } : { createdAt: -1 })
+  // 回傳資料
+
+  successHandle({ res, data })
 })
 
 /*
