@@ -1,10 +1,13 @@
 /* eslint-disable no-unused-vars */
 // Model
 const Image = require('../model/image')
+
 // Utils
 const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const { successHandle } = require('../utils/resHandle.js')
+const { uploadImge } = require('../utils/upload')
+const ApiState = require('../utils/apiState')
 
 /*
   res 回傳錯誤範例
@@ -39,7 +42,18 @@ const getUpload = catchAsync(async (req, res, next) => {
 */
 
 const createUpload = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: 'createUpload' })
+  if (!req.file) return next(new AppError(ApiState.FIELD_MISSING))
+
+  // 將圖檔轉成 base64 格式
+  const encodeImage = req.file.buffer.toString('base64')
+  // 上傳圖片
+  const { data: imgUrl } = await uploadImge(encodeImage)
+
+  const data = await Image.create({ url: imgUrl?.data?.link })
+
+  if (data) {
+    successHandle({ res, data })
+  }
 })
 
 module.exports = {
