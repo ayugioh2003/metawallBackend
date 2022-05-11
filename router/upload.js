@@ -9,6 +9,6 @@ router
   .route('/')
   .get(uploadController.getUpload) // 取得圖片列表
 
-router.post('/image', uploadModule.single('url'), uploadController.createUpload) // 上傳圖片
+router.post('/image', uploadModule.single('image'), uploadController.createUpload) // 上傳圖片
 
 module.exports = router
