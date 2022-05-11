@@ -6,7 +6,7 @@ const uploadController = require('../controller/upload.js')
 const { uploadModule } = require('../utils/upload')
 
 router
-  .route('/images')
+  .route('/image')
   .get(uploadController.getUpload) // 取得圖片列表
   .post(uploadModule.single('image'), uploadController.createUpload) // 上傳圖片
 
