@@ -3,8 +3,9 @@ const User = require('../model/user');
 // Utils
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const ApiState = require('../utils/ApiState');
 const { successHandle } = require('../utils/resHandle.js');
-const {  checkEmail,checkPassword } = require('../utils/verification');
+const { checkEmail, checkPassword } = require('../utils/verification');
 const { hashPassword } = require('../utils/hash');
 
 /*
@@ -25,8 +26,7 @@ const login = catchAsync(async (req, res, next) => {
   註冊功能	POST	/signup
 */
 const signup = catchAsync(async (req, res, next) => {
-  console.log(req.body);
-  if(!checkPassword(req.body.password)){
+  if (!checkPassword(req.body.password)) {
     return next(
       new AppError(
         ApiState.FIELD_MISSING.message,
@@ -41,8 +41,8 @@ const signup = catchAsync(async (req, res, next) => {
       password: hashPassword(req.body.password),
     };
     User.findOne({ email: memberData.email }, '_id name email').exec(
-      (err, res) => {
-        if (err) {
+      (findErr, findRes) => {
+        if (findErr) {
           return next(
             new AppError(
               ApiState.INTERNAL_SERVER_ERROR.message,
@@ -50,25 +50,35 @@ const signup = catchAsync(async (req, res, next) => {
             )
           );
         }
+
+        if (findRes !== {}) {
+          console.log(findRes);
+          return next(
+            new AppError(
+              ApiState.DATA_EXIST.message,
+              ApiState.DATA_EXIST.statusCode
+            )
+          );
+        }
+
+        User.create(memberData).exec((createErr, createRes) => {
+          if (createErr) {
+            return next(
+              new AppError(
+                ApiState.DATA_EXIST.message,
+                ApiState.DATA_EXIST.statusCode
+              )
+            );
+          }
+          const data = {
+            _id: createRes._id,
+            name: createRes.name,
+            email: createRes.email,
+          };
+          return successHandle({ res, message: '註冊成功', data });
+        });
       }
     );
-    try {
-      const result = await User.create(memberData);
-      const data = {
-        _id:result._id,
-        name:result.name,
-        email:result.email
-      }
-      return successHandle({ res, message: '註冊成功', data });
-    } catch (error) {
-      // 帳號已存在
-      return next(
-        new AppError(
-          ApiState.DATA_EXIST.message,
-          ApiState.DATA_EXIST.statusCode
-        )
-      );
-    }
   } else {
     return next(
       new AppError(
