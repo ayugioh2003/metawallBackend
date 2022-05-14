@@ -54,6 +54,11 @@ const signup = catchAsync(async (req, res, next) => {
     );
     try {
       const result = await User.create(memberData);
+      const data = {
+        _id:result._id,
+        name:result.name,
+        email:result.email
+      }
       return successHandle({ res, message: '註冊成功', data });
     } catch (error) {
       // 帳號已存在
