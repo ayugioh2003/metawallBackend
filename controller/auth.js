@@ -3,6 +3,7 @@ const User = require('../model/user');
 // Utils
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const ApiState = require('../utils/ApiState');
 const { successHandle } = require('../utils/resHandle.js');
 const { verifyToken, checkEmail } = require('../utils/verification');
 const { hashPassword } = require('../utils/hash');
@@ -31,20 +32,20 @@ const login = catchAsync(async (req, res, next) => {
   }).exec((err, findRes) => {
     if (err) {
       return next(
-        new AppError(
-          ApiState.INTERNAL_SERVER_ERROR.message,
-          ApiState.statusCode
-        )
+        new AppError({
+          message: ApiState.INTERNAL_SERVER_ERROR.message,
+          statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
+        })
       );
     }
 
     // find 沒找到東西的 res 是 null
     if (findRes === null) {
       return next(
-        new AppError(
-          ApiState.LOGIN_FAILED.message,
-          ApiState.LOGIN_FAILED.statusCode
-        )
+        new AppError({
+          message: ApiState.LOGIN_FAILED.message,
+          statusCode: ApiState.LOGIN_FAILED.statusCode,
+        })
       );
     } else {
       const token = jwt.sign(
