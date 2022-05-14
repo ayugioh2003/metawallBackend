@@ -28,10 +28,10 @@ const login = catchAsync(async (req, res, next) => {
 const signup = catchAsync(async (req, res, next) => {
   if (!checkPassword(req.body.password)) {
     return next(
-      new AppError(
-        ApiState.FIELD_MISSING.message,
-        ApiState.FIELD_MISSING.statusCode
-      )
+      new AppError({
+        message: ApiState.FIELD_MISSING.message,
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+      })
     );
   }
   if (checkEmail(req.body.email)) {
@@ -44,30 +44,29 @@ const signup = catchAsync(async (req, res, next) => {
       (findErr, findRes) => {
         if (findErr) {
           return next(
-            new AppError(
-              ApiState.INTERNAL_SERVER_ERROR.message,
-              ApiState.INTERNAL_SERVER_ERROR.statusCode
-            )
+            new AppError({
+              message: ApiState.INTERNAL_SERVER_ERROR.message,
+              statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
+            })
           );
         }
 
-        if (findRes !== {}) {
-          console.log(findRes);
+        if (findRes !== null) {
           return next(
-            new AppError(
-              ApiState.DATA_EXIST.message,
-              ApiState.DATA_EXIST.statusCode
-            )
+            new AppError({
+              message: ApiState.DATA_EXIST.message,
+              statusCode: ApiState.DATA_EXIST.statusCode,
+            })
           );
         }
 
-        User.create(memberData).exec((createErr, createRes) => {
+        User.create(memberData, (createErr, createRes) => {
           if (createErr) {
             return next(
-              new AppError(
-                ApiState.DATA_EXIST.message,
-                ApiState.DATA_EXIST.statusCode
-              )
+              new AppError({
+                message: ApiState.DATA_EXIST.message,
+                statusCode: ApiState.DATA_EXIST.statusCode,
+              })
             );
           }
           const data = {
@@ -81,10 +80,10 @@ const signup = catchAsync(async (req, res, next) => {
     );
   } else {
     return next(
-      new AppError(
-        ApiState.FIELD_MISSING.message,
-        ApiState.FIELD_MISSING.statusCode
-      )
+      new AppError({
+        message: ApiState.FIELD_MISSING.message,
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+      })
     );
   }
 });
