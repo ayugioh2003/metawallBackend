@@ -58,7 +58,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
     if (!checkPassword(req.body.password)) {
       return next(
         new AppError({
-          message: ApiState.FIELD_MISSING.message,
+          message: '密碼需至少一個英文字與數字，八碼以上',
           statusCode: ApiState.FIELD_MISSING.statusCode,
         })
       );
@@ -80,7 +80,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
         if (updateErr) {
           return next(
             new AppError({
-              message: ApiState.DATA_NOT_EXIST.message,
+              message: '帳號不存在',
               statusCode: ApiState.DATA_NOT_EXIST.statusCode,
             })
           );
@@ -90,7 +90,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
     } else {
       return next(
         new AppError({
-          message: ApiState.DATA_NOT_EXIST.message,
+          message: '信箱格式錯誤',
           statusCode: ApiState.DATA_NOT_EXIST.statusCode,
         })
       );
@@ -100,7 +100,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
   else {
     return next(
       new AppError({
-        message: ApiState.DATA_NOT_EXIST.message,
+        message: '帳號與token不符合',
         statusCode: ApiState.DATA_NOT_EXIST.statusCode,
       })
     );
