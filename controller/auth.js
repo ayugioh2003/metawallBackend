@@ -26,20 +26,33 @@ const login = catchAsync(async (req, res, next) => {
   註冊功能	POST	/signup
 */
 const signup = catchAsync(async (req, res, next) => {
+  let memberData = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
+  if (
+    memberData.name === undefined ||
+    memberData.email === undefined ||
+    memberData.password === undefined
+  ) {
+    return next(
+      new AppError({
+        message: '名稱、信箱、密碼為必填項目',
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+      })
+    );
+  }
   if (!checkPassword(req.body.password)) {
     return next(
       new AppError({
-        message: ApiState.FIELD_MISSING.message,
+        message: '密碼格式錯誤，需包含至少一個英文字與數字，密碼八碼以上',
         statusCode: ApiState.FIELD_MISSING.statusCode,
       })
     );
   }
   if (checkEmail(req.body.email)) {
-    const memberData = {
-      name: req.body.name,
-      email: req.body.email,
-      password: hashPassword(req.body.password),
-    };
+    memberData.password = hashPassword(req.body.password);
     User.findOne({ email: memberData.email }, '_id name email').exec(
       (findErr, findRes) => {
         if (findErr) {
@@ -81,7 +94,7 @@ const signup = catchAsync(async (req, res, next) => {
   } else {
     return next(
       new AppError({
-        message: ApiState.FIELD_MISSING.message,
+        message: '信箱格式錯誤',
         statusCode: ApiState.FIELD_MISSING.statusCode,
       })
     );

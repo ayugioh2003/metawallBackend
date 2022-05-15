@@ -41,7 +41,7 @@ function checkEmail(email) {
 
 // 驗證密碼
 function checkPassword(password) {
-  const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}$/
+  const re = /^(?=.*\d)(?=.*[a-zA-Z]).{7,}$/
   const result = re.test(password)
 
   return result
