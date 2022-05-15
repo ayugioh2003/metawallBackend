@@ -67,7 +67,7 @@ const signup = catchAsync(async (req, res, next) => {
         if (findRes !== null) {
           return next(
             new AppError({
-              message: ApiState.DATA_EXIST.message,
+              message: '信箱已被使用',
               statusCode: ApiState.DATA_EXIST.statusCode,
             })
           );
