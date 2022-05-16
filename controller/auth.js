@@ -5,7 +5,6 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const ApiState = require('../utils/ApiState');
 const { successHandle } = require('../utils/resHandle.js');
-const { verifyToken, checkEmail } = require('../utils/verification');
 const { hashPassword } = require('../utils/hash');
 // jwt
 const jwt = require('jsonwebtoken');
@@ -21,7 +20,7 @@ const jwt = require('jsonwebtoken');
   登入功能	POST	/login
 */
 const login = catchAsync(async (req, res, next) => {
-  
+
   let memberData = {
     email: req.body.email,
     password: req.body.password,
