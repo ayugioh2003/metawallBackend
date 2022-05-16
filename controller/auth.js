@@ -31,11 +31,7 @@ const signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
   };
-  if (
-    memberData.name === undefined ||
-    memberData.email === undefined ||
-    memberData.password === undefined
-  ) {
+  if (!memberData.name || !memberData.email || !memberData.password) {
     return next(
       new AppError({
         message: '名稱、信箱、密碼為必填項目',
@@ -51,47 +47,7 @@ const signup = catchAsync(async (req, res, next) => {
       })
     );
   }
-  if (checkEmail(req.body.email)) {
-    memberData.password = hashPassword(req.body.password);
-    User.findOne({ email: memberData.email }, '_id name email').exec(
-      (findErr, findRes) => {
-        if (findErr) {
-          return next(
-            new AppError({
-              message: ApiState.INTERNAL_SERVER_ERROR.message,
-              statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
-            })
-          );
-        }
-
-        if (findRes !== null) {
-          return next(
-            new AppError({
-              message: '信箱已被使用',
-              statusCode: ApiState.DATA_EXIST.statusCode,
-            })
-          );
-        }
-
-        User.create(memberData, (createErr, createRes) => {
-          if (createErr) {
-            return next(
-              new AppError({
-                message: ApiState.DATA_EXIST.message,
-                statusCode: ApiState.DATA_EXIST.statusCode,
-              })
-            );
-          }
-          const data = {
-            _id: createRes._id,
-            name: createRes.name,
-            email: createRes.email,
-          };
-          return successHandle({ res, message: '註冊成功', data });
-        });
-      }
-    );
-  } else {
+  if (!checkEmail(req.body.email)) {
     return next(
       new AppError({
         message: '信箱格式錯誤',
@@ -99,6 +55,40 @@ const signup = catchAsync(async (req, res, next) => {
       })
     );
   }
+
+  User.findOne({ email: memberData.email }, '_id name email').exec(
+    (findErr, findRes) => {
+      console.log('findErr', findErr)
+      console.log('findRes', findRes)
+      if (findErr) {
+        return next(
+          new AppError({
+            message: ApiState.INTERNAL_SERVER_ERROR.message,
+            statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
+          })
+        );
+      }
+
+      if (findRes !== null) {
+        return next(
+          new AppError({
+            message: '信箱已被使用',
+            statusCode: ApiState.DATA_EXIST.statusCode,
+          })
+        );
+      }
+    })
+  
+
+  memberData.password = hashPassword(req.body.password);
+  const createRes = await User.create(memberData)
+  console.log('createRes', createRes)
+  const data = {
+    _id: createRes._id,
+    name: createRes.name,
+    email: createRes.email,
+  };
+  return successHandle({ res, message: '註冊成功', data });
 });
 
 /*
