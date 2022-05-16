@@ -21,16 +21,30 @@ const jwt = require('jsonwebtoken');
   登入功能	POST	/login
 */
 const login = catchAsync(async (req, res, next) => {
-  const memberData = {
+  
+  let memberData = {
     email: req.body.email,
-    password: hashPassword(req.body.password),
+    password: req.body.password,
   };
+
+  if (!memberData.email || !memberData.password) {
+    return next(
+      new AppError({
+        message: '信箱、密碼為必填項目',
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+      })
+    );
+  }
+
+  memberData.password = hashPassword(req.body.password)
 
   User.findOne({
     email: memberData.email,
     password: memberData.password,
-  }).exec((err, findRes) => {
-    if (err) {
+  }).exec((findErr, findRes) => {
+    console.log('findErr', findErr);
+    console.log('findRes', findRes);
+    if (findErr) {
       return next(
         new AppError({
           message: ApiState.INTERNAL_SERVER_ERROR.message,
@@ -43,7 +57,7 @@ const login = catchAsync(async (req, res, next) => {
     if (findRes === null) {
       return next(
         new AppError({
-          message: ApiState.LOGIN_FAILED.message,
+          message: '帳號密碼錯誤',
           statusCode: ApiState.LOGIN_FAILED.statusCode,
         })
       );
