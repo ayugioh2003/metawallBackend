@@ -39,4 +39,11 @@ function checkEmail(email) {
   return result;
 }
 
-module.exports = { verifyToken, checkEmail };
+// 驗證密碼
+function checkPassword(password) {
+  const re = /^(?=.*\d)(?=.*[a-zA-Z]).{7,}$/
+  const result = re.test(password)
+
+  return result
+}
+module.exports = { verifyToken, checkEmail,checkPassword };
