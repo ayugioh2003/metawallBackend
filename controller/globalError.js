@@ -51,7 +51,7 @@ module.exports = (err, req, res, next) => {
 
   if (err instanceof SyntaxError) setError(ApiState.SYNTAX_ERROR, err)
   if (err instanceof ReferenceError) setError(ApiState.REFERENCE_ERROR, err)
-  if (err instanceof TypeError) setError(ApiState.TypeError, err)
+  if (err instanceof TypeError) setError(ApiState.TYPE_ERROR, err)
   if (err.name === 'ValidationError') error = handleValidationErrorDB(err)
   else
     err.message = isDev
