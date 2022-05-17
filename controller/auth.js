@@ -3,7 +3,7 @@ const User = require('../model/user');
 // Utils
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const ApiState = require('../utils/ApiState');
+const ApiState = require('../utils/apiState');
 const { successHandle } = require('../utils/resHandle.js');
 const { checkEmail, checkPassword } = require('../utils/verification');
 const { hashPassword } = require('../utils/hash');
