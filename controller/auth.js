@@ -48,7 +48,7 @@ const login = catchAsync(async (req, res, next) => {
     if (findErr) {
       return next(
         new AppError({
-          message: ApiState.INTERNAL_SERVER_ERROR.message,
+          message: findErr.message,
           statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
         })
       );
@@ -62,33 +62,34 @@ const login = catchAsync(async (req, res, next) => {
           statusCode: ApiState.LOGIN_FAILED.statusCode,
         })
       );
-    } else {
-      const token = jwt.sign(
-        {
-          // 加密方式
-          algorithm: 'HS256',
-          // 多久之後到期 60一分鐘到期 60*60一小時 也可以不用exp直接在secret後面加上{ expiresIn: '1h' }
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
-          // data的內容可以在登入解密出來
-          data: findRes._id,
-        },
-        // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
-        // 驗證的時候要用一樣的字串去解 不然會算不出原本的資料
-        'secret'
-      );
+    } 
 
-      res.setHeader('token', token);
-      findRes.token = token;
+    const token = jwt.sign(
+      // data的內容可以在登入解密出來
+      {
+        id: findRes._id
+      },
+      // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
+      // 驗證的時候要用一樣的字串去解 不然會算不出原本的資料
+      process.env.SECRET || 'secret',
+      { 
+        algorithm: 'HS256', // 加密方式
+        // 多久之後到期 60一分鐘到期 60*60一小時
+        // 也可以不用exp直接在secret後面加上{ expiresIn: '1h' }
+        // exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        expiresIn: process.env.EXPIRES_IN || '1h'
+      }
+    );
 
-      return successHandle({
-        res,
-        message: '登入成功',
-        data: {
-          user: findRes,
-          token: findRes.token,
-        },
-      });
-    }
+    res.setHeader('token', token);
+    return successHandle({
+      res,
+      message: '登入成功',
+      data: {
+        user: findRes,
+        token: token,
+      },
+    });
   });
 });
 
