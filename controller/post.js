@@ -30,7 +30,7 @@ const getPost = catchAsync(async (req, res, next) => {
 
   const data = await Post.find({...userId, ...q}).populate({
     path: 'user',
-    select: 'id name avatar comments like_users_id'
+    select: 'id name avatar'
   }).sort(timeSort);
 
   successHandle({ res, message: '取得貼文列表成功', data });
