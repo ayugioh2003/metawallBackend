@@ -45,6 +45,7 @@ const UserSchema = new mongoose.Schema({
   // TODO: 驗證解析度寬度至少 300、圖片寬高比 1:1
   avatar: {
     type: String,
+    default: '',
     required: false
   },
 
