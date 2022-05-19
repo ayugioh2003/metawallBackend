@@ -177,9 +177,17 @@ const resetPassword = catchAsync(async (req, res, next) => {
   successHandle({ res, message: '修改密碼成功' });
 });
 
+/*
+  驗證token	GET	/check
+*/
+const checkToken = catchAsync(async (req, res, next) => {
+  successHandle({ res, message: 'token驗證成功' });
+});
+
 module.exports = {
   login,
   signup,
   logout,
   resetPassword,
+  checkToken,
 };
