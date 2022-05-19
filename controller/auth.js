@@ -181,17 +181,18 @@ const resetPassword = catchAsync(async (req, res, next) => {
   驗證token	GET	/check
 */
 const checkToken = catchAsync(async (req, res, next) => {
-  const id = req.body.id;
   const token = req.headers.token;
   // 取的token驗證通過解密出來的使用者id
   const verify = await verifyToken(token);
-  if (verify && verify === id){
-    return successHandle({ res, message: '驗證通過', data:{id}});
+  if (verify){
+    const result = await User.findOne({id:verify},'_id name email')
+    console.log(result);
+    return successHandle({ res, message: '驗證通過', data:result});
   }
   else{
     return next(
       new AppError({
-        message: '帳號與token不符合',
+        message: 'token不符合',
         statusCode: ApiState.DATA_NOT_EXIST.statusCode,
       })
     );
