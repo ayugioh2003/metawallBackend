@@ -16,7 +16,13 @@ const ApiState = require('../utils/apiState')
 
 /* 取得目前資訊	GET	/users/current-userinfo */
 const getCurrentUserInfo = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: '取得目前資訊成功' })
+  // TODO: userId 先寫死
+  const userId = req?.user?.id || '62859b708528e159a6ec9fc7';
+  const user = await User.findById(userId);
+  if(!user) {
+    return next(AppError(ApiState.FAIL));
+  }
+  successHandle({ res, ...ApiState.SUCCESS, data: user })
 })
 
 /* 修改個人資訊	PATCH	/users/current-userinfo */
@@ -26,12 +32,21 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
 
 /* 取得個人資訊 GET	/users/:user_id */
 const getUserInfo = catchAsync(async (req, res, next) => {
-  return next(new AppError(ApiState.FIELD_MISSING))
+  const user_id = req.params.user_id;
+  const user = await User.findById(user_id);
+  if(!user) {
+    return next(new AppError(ApiState.DATA_NOT_EXIST));
+  }
+  successHandle({ res, ...ApiState.SUCCESS, data: user });
 })
 
 /* 取得用戶列表	GET	/users */
 const getUserList = catchAsync(async (req, res, next) => {
-  return next(new AppError(ApiState.FIELD_MISSING))
+  const users = await User.find();
+  if(!users){
+    return next(AppError(ApiState.FAIL));
+  }
+  successHandle({res, ...ApiState.SUCCESS, data:users});
 })
 
 /* 新增個人資訊 POST /users/:user_id */
