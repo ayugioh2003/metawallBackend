@@ -6,7 +6,7 @@ const AppError = require('../utils/appError');
 const ApiState = require('../utils/apiState');
 const { successHandle } = require('../utils/resHandle.js');
 
-const { checkEmail, checkPassword } = require('../utils/verification');
+const { checkEmail, checkPassword,verifyToken } = require('../utils/verification');
 const { hashPassword } = require('../utils/hash');
 // jwt
 const jwt = require('jsonwebtoken');
@@ -181,7 +181,22 @@ const resetPassword = catchAsync(async (req, res, next) => {
   驗證token	GET	/check
 */
 const checkToken = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: 'token驗證成功' });
+  const id = req.body.id;
+  const token = req.headers.token;
+  // 取的token驗證通過解密出來的使用者id
+  const verify = await verifyToken(token);
+  if (verify && verify === id){
+    return successHandle({ res, message: '驗證通過', data:{id}});
+  }
+  else{
+    return next(
+      new AppError({
+        message: '帳號與token不符合',
+        statusCode: ApiState.DATA_NOT_EXIST.statusCode,
+      })
+    );
+  }
+
 });
 
 module.exports = {

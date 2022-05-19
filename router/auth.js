@@ -14,6 +14,6 @@ router.post('/logout', authController.logout)
 // 修改密碼
 router.post('/reset-password', authController.resetPassword)
 // 驗證token
-router.get('/check', authController.checkToken)
+router.post('/check', authController.checkToken)
 
 module.exports = router

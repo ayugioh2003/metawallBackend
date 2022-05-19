@@ -12,7 +12,7 @@ function verifyToken(token) {
     //   使用jwt函式判斷token是否過期
     if (token) {
       // secret字串要跟token加密的字串一樣 最好是寫在 env 檔裡面
-      jwt.verify(token, 'secret', (error, decoded) => {
+      jwt.verify(token, process.env.SECRET, (error, decoded) => {
         if (error) {
           result = false;
           resolve(result);
@@ -20,12 +20,12 @@ function verifyToken(token) {
           result = false;
           resolve(result);
         } else {
-          result = decoded.data;
+          result = decoded.id;
           resolve(result);
         }
       });
     } else {
-      reject(new AppError('找不到 Token', 400));
+      reject(new AppError('Token驗證失敗', 400));
     }
   });
 }
