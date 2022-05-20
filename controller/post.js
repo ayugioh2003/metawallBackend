@@ -62,16 +62,12 @@ const getSinglePost = catchAsync(async (req, res, next) => {
   // 檢查ObjectId是否有誤
   if(checkObjectId(postId, next) !== 'ok') return;
 
-  // 檢查是否有此筆貼文資料
-  const userData = await Post.findById(postId).exec();
-  if(!userData) {
-    return next(new AppError({message:'查無貼文資料', statusCode:400}));
-  };
-
-  const data = await Post.find({_id: postId}).populate({
+  const data = await Post.findById(postId).populate({
     path: 'user',
     select: '_id name avatar'
-  });
+  }).exec();
+
+  if (!data) return next(new AppError({message:'查無貼文資料', statusCode:400}));
   
   successHandle({ res, message: '取得單一貼文成功', data })
 })
