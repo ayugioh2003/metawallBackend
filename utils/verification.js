@@ -46,4 +46,20 @@ function checkPassword(password) {
 
   return result
 }
-module.exports = { verifyToken, checkEmail,checkPassword };
+
+// 檢查ObjectId是否有誤 
+function checkObjectId(objectId, next) {
+  if (!objectId.match(/^[0-9a-fA-F]{24}$/)) {
+    return next(new AppError({message:'Id格式錯誤', statusCode:400}));
+  }
+
+  return 'ok';
+};
+
+
+module.exports = { 
+  verifyToken,
+  checkEmail,
+  checkPassword,
+  checkObjectId,
+};
