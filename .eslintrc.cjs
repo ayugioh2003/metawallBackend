@@ -12,7 +12,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'no-unused-vars': ['never'],
+    'no-unused-vars': ['off'],
     // import 檔案不檢驗 .js
     'import/extensions': ['error', 'ignorePackages', {
       js: 'always',
