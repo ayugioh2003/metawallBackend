@@ -73,7 +73,6 @@ const login = catchAsync(async (req, res, next) => {
     const token = jwt.sign(
       // data的內容可以在登入解密出來
       {
-        // eslint-disable-next-line no-underscore-dangle
         id: findRes._id,
       },
       // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
@@ -261,7 +260,6 @@ const checkToken = catchAsync(async (req, res, next) => {
       }),
     )
   }
-
   // 取的token驗證通過解密出來的使用者id
   const verify = await verifyToken(token)
   console.log('verify', verify)
