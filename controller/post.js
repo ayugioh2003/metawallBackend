@@ -36,24 +36,15 @@ const getPost = catchAsync(async (req, res, next) => {
 // 新增貼文 API
 const createPost = catchAsync(async (req, res, next) => {
   const {
-    user, content, image, comments, like_users_id, createdAt, updatedAt,
+    content, image, comments, like_users_id,
   } = req.body
 
-  if (!user || !content) return next(new AppError(ApiState.FIELD_MISSING))
 
-  // 檢查 ObjectId 型別是否有誤
-  if (!checkObjectId(user)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
-
-  // 檢查是否有使用者資料
-  const userData = await User.findById(user).exec()
-  if (!userData) {
-    return next(new AppError({ message: '查無使用者資料', statusCode: 400 }))
-  }
+  if (!content) return next(new AppError(ApiState.FIELD_MISSING))
 
   const data = await Post.create({
-    user, content, image, comments, like_users_id, createdAt, updatedAt,
+    user: req.user._id, 
+    content, image, comments, like_users_id
   })
 
   successHandle({ res, message: '新增成功', data })
