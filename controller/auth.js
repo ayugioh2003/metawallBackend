@@ -16,7 +16,6 @@ const {
   verifyToken,
 } = require('../utils/verification')
 const { hashPassword } = require('../utils/hash')
-// jwt
 
 /*
   res 回傳錯誤範例
