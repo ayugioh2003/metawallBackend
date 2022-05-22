@@ -3,19 +3,19 @@
 /* eslint-disable consistent-return */
 // Model
 const jwt = require('jsonwebtoken')
-const User = require('../model/user.js')
+const User = require('../model/user')
 // Utils
-const catchAsync = require('../utils/catchAsync.js')
-const AppError = require('../utils/appError.js')
-const ApiState = require('../utils/apiState.js')
-const { successHandle } = require('../utils/resHandle.js')
+const catchAsync = require('../utils/catchAsync')
+const AppError = require('../utils/appError')
+const ApiState = require('../utils/apiState')
+const { successHandle } = require('../utils/resHandle')
 
 const {
   checkEmail,
   checkPassword,
   verifyToken,
-} = require('../utils/verification.js')
-const { hashPassword } = require('../utils/hash.js')
+} = require('../utils/verification')
+const { hashPassword } = require('../utils/hash')
 // jwt
 
 /*
@@ -49,9 +49,7 @@ const login = catchAsync(async (req, res, next) => {
     email: memberData.email,
     password: memberData.password,
   }).exec((findErr, findRes) => {
-    // eslint-disable-next-line no-console
     console.log('findErr', findErr)
-    // eslint-disable-next-line no-console
     console.log('findRes', findRes)
     if (findErr) {
       return next(
@@ -290,7 +288,6 @@ const isAuth = async (req, res, next) => {
     req.headers.authorization
     && req.headers.authorization.startsWith('Bearer')
   ) {
-    // eslint-disable-next-line prefer-destructuring
     token = req.headers.authorization.split(' ')[2]
   }
 
