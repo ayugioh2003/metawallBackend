@@ -16,7 +16,18 @@ const Post = require('../model/post.js')
 
 // 取得貼文按讚
 const getPostLikes = catchAsync(async (req, res, next) => {
-  successHandle({ res })
+  const { post_id } = req.query
+
+  const post = await Post.findById(post_id).select('_id likes')
+  if (!post) return next(new AppError(ApiState.DATA_NOT_EXIST))
+
+  successHandle({
+    res,
+    data: {
+      likes: post.likes.length,
+      post,
+    },
+  })
 })
 
 // 取得留言按讚
