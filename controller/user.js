@@ -15,9 +15,7 @@ const ApiState = require('../utils/apiState.js')
 
 /* 取得目前資訊GET/users/current-userinfo */
 const getCurrentUserInfo = catchAsync(async (req, res, next) => {
-  // TODO: userId 先寫死
-  const userId = req?.user?.id || '62859b708528e159a6ec9fc7'
-  const user = await User.findById(userId)
+  const user = req?.user
   if (!user) {
     return next(AppError(ApiState.FAIL))
   }
