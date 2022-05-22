@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 // Model
 const Post = require('../model/post.js')
 const User = require('../model/user.js')
@@ -15,7 +16,7 @@ const { successHandle } = require('../utils/resHandle.js')
 
 // 取得貼文列表 API
 const getPost = catchAsync(async (req, res, next) => {
-  const query = req.query
+  const { query } = req
 
   // 檢查 ObjectId 型別是否有誤
   if (query.user_id && !checkObjectId(query.user_id)) {
@@ -36,15 +37,16 @@ const getPost = catchAsync(async (req, res, next) => {
 // 新增貼文 API
 const createPost = catchAsync(async (req, res, next) => {
   const {
-    content, image, comments, like_users_id,
+    content, image, comments,
   } = req.body
-
 
   if (!content) return next(new AppError(ApiState.FIELD_MISSING))
 
   const data = await Post.create({
-    user: req.user._id, 
-    content, image, comments, like_users_id
+    user: req.user._id,
+    content,
+    image,
+    comments,
   })
 
   successHandle({ res, message: '新增成功', data })
@@ -81,10 +83,17 @@ const deleteSinglePost = catchAsync(async (req, res, next) => {
   successHandle({ res, message: 'deleteSinglePost' })
 })
 
+// 刪除所有貼文 DELETE /posts
+const deleteAllPost = catchAsync(async (req, res, next) => {
+  await Post.deleteMany()
+  successHandle({ res, message: '刪除所有貼文成功' })
+})
+
 module.exports = {
   getPost,
   createPost,
   getSinglePost,
   updateSinglePost,
   deleteSinglePost,
+  deleteAllPost,
 }
