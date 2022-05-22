@@ -45,7 +45,8 @@ const UserSchema = new mongoose.Schema({
   // TODO: 驗證解析度寬度至少 300、圖片寬高比 1:1
   avatar: {
     type: String,
-    required: false
+    required: false,
+    default: ' '
   },
 
   // 建立時間，轉為 Timestamp 以方便前端好處理
