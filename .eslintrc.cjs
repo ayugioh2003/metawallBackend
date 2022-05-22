@@ -24,5 +24,6 @@ module.exports = {
     'no-multiple-empty-lines': ['error'], // 允許最大連續斷一行,
     'linebreak-style': 'off',
     'no-param-reassign': [2, { props: false }],
+    'consistent-return': 'off',
   },
 }
