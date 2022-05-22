@@ -306,7 +306,6 @@ const isAuth = async (req, res, next) => {
 
   // 取的token驗證通過解密出來的使用者id
   const verify = await verifyToken(token)
-  console.log(verify);
   if (verify) {
     console.log('驗證通過')
     const result = await User.findOne({ _id: verify }, '_id name email')
