@@ -32,7 +32,7 @@ const getPostLikes = catchAsync(async (req, res, next) => {
 
 // 取得留言按讚
 const getCommentLikes = catchAsync(async (req, res, next) => {
-  successHandle({ res })
+
 })
 
 // 切換[貼文]按讚狀態 PATCH /likes?post_id={post_id}
@@ -40,6 +40,7 @@ const patchPostLikes = catchAsync(async (req, res, next) => {
   const { post_id, toggle_type } = req.query
   let post = {}
 
+  // 按讚
   if (toggle_type === 'add') {
     post = await Post.findOneAndUpdate(
       { _id: post_id },
@@ -48,6 +49,7 @@ const patchPostLikes = catchAsync(async (req, res, next) => {
     )
   }
 
+  // 取消讚
   if (toggle_type === 'remove') {
     post = await Post.findByIdAndUpdate(
       { _id: post_id },
@@ -107,15 +109,7 @@ const toggleLike = catchAsync(async (req, res, next) => {
   if (comment_id) patchCommentLikes(req, res, next)
 })
 
-/*
-  取得用戶按讚貼文 GET /posts?like_user_id
-*/
-const getUserLike = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: 'getUserLike' })
-})
-
 module.exports = {
   getLike,
   toggleLike,
-  getUserLike,
 }

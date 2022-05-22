@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-underscore-dangle */
 // Model
+const { query } = require('express')
 const Post = require('../model/post.js')
 const User = require('../model/user.js')
 // Utils
@@ -9,13 +11,36 @@ const AppError = require('../utils/appError.js')
 const { checkObjectId } = require('../utils/verification.js')
 const { successHandle } = require('../utils/resHandle.js')
 
-/*
-  取得貼文列表 GET /posts?user_id
-  取得用戶按讚貼文 GET /posts?like_user_id
-  */
+// 取得用戶按讚貼文 [GET] /posts?like_user_id={user_id}
+const getUserLike = catchAsync(async (req, res, next) => {
+  const { like_user_id } = req.query
 
-// 取得貼文列表 API
-const getPost = catchAsync(async (req, res, next) => {
+  // 檢查 ObjectId 型別是否有誤
+  if (like_user_id && !checkObjectId(like_user_id)) {
+    return next(new AppError({ message: 'ID 格式錯誤', statusCode: 400 }))
+  }
+
+  const myLikeList = await Post
+    .find({
+      likes: { $in: [like_user_id] },
+    })
+    .populate({
+      path: 'user',
+      select: '_id name email',
+    })
+
+  // 檢查資料是否存在
+  if (!myLikeList) return next(new AppError(ApiState.DATA_NOT_EXIST))
+
+  successHandle({
+    res,
+    data: myLikeList,
+  })
+})
+
+// 取得貼文列表 [GET] /posts?user_id={user_id}
+const getPostList = catchAsync(async (req, res, next) => {
+  // eslint-disable-next-line no-shadow
   const { query } = req
 
   // 檢查 ObjectId 型別是否有誤
@@ -32,6 +57,21 @@ const getPost = catchAsync(async (req, res, next) => {
   }).sort(timeSort)
 
   successHandle({ res, message: '取得貼文列表成功', data })
+})
+
+/*
+  根據 query 給的參數不同，做取得貼文按讚 / 取得留言按讚
+
+  - 取得貼文列表 [GET] /posts?user_id={user_id}
+  - 取得用戶按讚貼文 [GET] /posts?like_user_id={like_user_id}
+*/
+const getPost = catchAsync(async (req, res, next) => {
+  const { like_user_id } = req.query
+
+  // 若提供 like_user_id 參數，則執行 [取得用戶按讚貼文]
+  // 若無提供任何參數，執行 [取得貼文列表]
+  if (like_user_id) getUserLike(req, res, next)
+  else getPostList(req, res, next)
 })
 
 // 新增貼文 API
