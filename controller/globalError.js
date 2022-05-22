@@ -1,4 +1,4 @@
-const ApiState = require('../utils/apiState')
+const ApiState = require('../utils/apiState.js')
 
 // DB 欄位驗證
 const handleValidationErrorDB = (err) => {
@@ -47,14 +47,14 @@ module.exports = (err, req, res, next) => {
 
   err.statusCode = err.statusCode ?? customeMessage.statusCode
   err.status = err.status ?? customeMessage.status
-  err.name = err.name
-  err.stack = err.stack
+  // err.name = err.name
+  // err.stack = err.stack
   console.log('err.status', err.status)
 
   if (err instanceof SyntaxError) setError(ApiState.SYNTAX_ERROR, err)
   if (err instanceof ReferenceError) setError(ApiState.REFERENCE_ERROR, err)
   if (err instanceof TypeError) setError(ApiState.TYPE_ERROR, err)
-  if (err.name === 'ValidationError') error = handleValidationErrorDB(err)
+  if (err.name === 'ValidationError') handleValidationErrorDB(err)
   else {
     err.message = isDev
       ? err.message
