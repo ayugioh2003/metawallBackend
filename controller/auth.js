@@ -206,7 +206,7 @@ const checkToken = catchAsync(async (req, res, next) => {
   const verify = await verifyToken(token)
   console.log('verify', verify)
   if (verify) {
-    const result = await User.findOne({ id: verify }, '_id name email')
+    const result = await User.findOne({ _id: verify }, '_id name email')
     console.log(result)
     return successHandle({ res, message: '驗證通過', data: result })
   }
@@ -244,7 +244,7 @@ const isAuth = async (req, res, next) => {
   const verify = await verifyToken(token)
   if (verify) {
     console.log('驗證通過')
-    const result = await User.findOne({ id: verify }, '_id name email')
+    const result = await User.findOne({ _id: verify }, '_id name email')
     req.user = result
     next()
   } else {
