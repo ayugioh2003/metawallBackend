@@ -29,6 +29,11 @@ const apiState = {
     message: '更新失敗',
     statusCode: 400
   },
+  LOGIN_FAILED: {
+    status: 6,
+    message: '登入失敗',
+    statusCode: 400,
+  },
   ROUTER_NOT_FOUND: {
     status: 9000,
     message: '找不到路由',

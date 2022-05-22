@@ -182,13 +182,11 @@ const logout = catchAsync(async (req, res, next) => {
   修改密碼 PATCH /reset-password
 */
 const resetPassword = catchAsync(async (req, res, next) => {
-  const id = req.body.id;
-  const token = req.headers.token;
-
-  const verify = await verifyToken(token);
+  const userId = req.user.id;
+  const reqId = req.body.id;
 
   // 驗證要修改的帳號是不是登入的帳號
-  if (verify && verify === id) {
+  if (userId === reqId) {
     
     // 驗證要改的密碼是否通過驗證
     if (!checkPassword(req.body.password)) {
@@ -202,7 +200,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
     
     // 測試資料全部都寫  如果沒填就用前端取得的舊會員資料
     const memberData = {
-      id: verify,
+      id: userId,
       name: req.body.name,
       email: req.body.email,
       password: hashPassword(req.body.password),
@@ -293,7 +291,7 @@ const isAuth = async (req, res, next) => {
     && req.headers.authorization.startsWith('Bearer')
   ) {
     // eslint-disable-next-line prefer-destructuring
-    token = req.headers.authorization.split(' ')[1]
+    token = req.headers.authorization.split(' ')[2]
   }
 
   if (!token) {
@@ -305,8 +303,10 @@ const isAuth = async (req, res, next) => {
       }),
     )
   }
+
   // 取的token驗證通過解密出來的使用者id
   const verify = await verifyToken(token)
+  console.log(verify);
   if (verify) {
     console.log('驗證通過')
     const result = await User.findOne({ _id: verify }, '_id name email')
