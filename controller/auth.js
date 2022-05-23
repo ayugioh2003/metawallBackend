@@ -236,10 +236,12 @@ const isAuth = async (req, res, next) => {
       }),
     )
   }
-  // 取的token驗證通過解密出來的使用者id
+  // 取得 token 驗證通過解密出來的使用者id
   const verify = await verifyToken(token)
   if (verify) {
     const result = await User.findOne({ _id: verify }, '_id name email')
+    if (!result) return next(new AppError(ApiState.LOGIN_FAILED))
+
     req.user = result
     next()
   } else {
