@@ -30,7 +30,7 @@ const PostSchema = new mongoose.Schema(
     // 貼文按讚使用者
     likes: [{
       type: mongoose.Schema.ObjectId,
-      ref: 'user',
+      ref: 'User',
     }],
 
     // 建立時間，轉為 Timestamp 以方便前端好處理
