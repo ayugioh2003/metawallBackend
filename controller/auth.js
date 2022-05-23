@@ -1,18 +1,21 @@
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-underscore-dangle */
 // Model
 const jwt = require('jsonwebtoken')
-const User = require('../model/user')
+const User = require('../model/user.js')
 // Utils
-const catchAsync = require('../utils/catchAsync')
-const AppError = require('../utils/appError')
-const ApiState = require('../utils/apiState')
+const catchAsync = require('../utils/catchAsync.js')
+const AppError = require('../utils/appError.js')
+const ApiState = require('../utils/apiState.js')
 const { successHandle } = require('../utils/resHandle.js')
 
 const {
   checkEmail,
   checkPassword,
   verifyToken,
-} = require('../utils/verification')
-const { hashPassword } = require('../utils/hash')
+} = require('../utils/verification.js')
+const { hashPassword } = require('../utils/hash.js')
 // jwt
 
 /*
@@ -23,7 +26,7 @@ const { hashPassword } = require('../utils/hash')
 */
 
 /*
-  登入功能	POST	/login
+  登入功能 POST /login
 */
 const login = catchAsync(async (req, res, next) => {
   const memberData = {
@@ -46,8 +49,6 @@ const login = catchAsync(async (req, res, next) => {
     email: memberData.email,
     password: memberData.password,
   }).exec((findErr, findRes) => {
-    console.log('findErr', findErr)
-    console.log('findRes', findRes)
     if (findErr) {
       return next(
         new AppError({
@@ -97,7 +98,7 @@ const login = catchAsync(async (req, res, next) => {
 })
 
 /*
-  註冊功能	POST	/signup
+  註冊功能 POST /signup
 */
 const signup = catchAsync(async (req, res, next) => {
   const memberData = {
@@ -132,8 +133,6 @@ const signup = catchAsync(async (req, res, next) => {
 
   User.findOne({ email: memberData.email }, '_id name email').exec(
     (findErr, findRes) => {
-      console.log('findErr', findErr)
-      console.log('findRes', findRes)
       if (findErr) {
         return next(
           new AppError({
@@ -156,7 +155,6 @@ const signup = catchAsync(async (req, res, next) => {
 
   memberData.password = hashPassword(req.body.password)
   const createRes = await User.create(memberData)
-  console.log('createRes', createRes)
   const data = {
     _id: createRes._id,
     name: createRes.name,
@@ -204,13 +202,11 @@ const checkToken = catchAsync(async (req, res, next) => {
 
   // 取的token驗證通過解密出來的使用者id
   const verify = await verifyToken(token)
-  console.log('verify', verify)
   if (verify) {
     const result = await User.findOne({ _id: verify }, '_id name email')
-    console.log(result)
     return successHandle({ res, message: '驗證通過', data: result })
   }
-  console.log('ApiState.FAIL.status', ApiState.FAIL.status)
+
   return next(
     new AppError({
       message: 'token不符合',
@@ -243,7 +239,6 @@ const isAuth = async (req, res, next) => {
   // 取的token驗證通過解密出來的使用者id
   const verify = await verifyToken(token)
   if (verify) {
-    console.log('驗證通過')
     const result = await User.findOne({ _id: verify }, '_id name email')
     req.user = result
     next()
