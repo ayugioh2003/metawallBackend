@@ -24,7 +24,7 @@ const getPostLikes = catchAsync(async (req, res, next) => {
   successHandle({
     res,
     data: {
-      likes: post.likes.length,
+      likeCount: post.likes.length,
       post,
     },
   })
@@ -64,7 +64,7 @@ const patchPostLikes = catchAsync(async (req, res, next) => {
   successHandle({
     res,
     data: {
-      likes: post.likes.length,
+      likeCount: post.likes.length,
       post,
     },
   })
