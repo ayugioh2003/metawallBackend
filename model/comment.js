@@ -30,6 +30,12 @@ const CommentSchema = new mongoose.Schema(
       required: [true, '使用者ID必填'],
       ref: 'User',
     },
+    // 關聯－post
+    post: {
+      type: mongoose.Schema.ObjectId,
+      required: [true, '貼文ID必填'],
+      ref: 'Post',
+    },
   },
   {
     versionKey: false,
