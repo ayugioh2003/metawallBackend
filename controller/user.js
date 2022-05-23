@@ -19,7 +19,8 @@ const getCurrentUserInfo = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(AppError(ApiState.FAIL))
   }
-  return successHandle({ res, ...ApiState.SUCCESS, data: user })
+  const userInfo = await User.findById(user?.id)
+  return successHandle({ res, ...ApiState.SUCCESS, data: userInfo })
 })
 
 /* 修改個人資訊PATCH/users/current-userinfo */
@@ -30,7 +31,7 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
 /* 取得個人資訊 GET/users/:user_id */
 const getUserInfo = catchAsync(async (req, res, next) => {
   const userId = req.params.user_id
-  const user = await User.findById(userId)
+  const user = await User.findById(userId).select('_id name avatar')
   if (!user) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))
   }
@@ -53,7 +54,7 @@ const createUserInfo = catchAsync(async (req, res, next) => {
 
 /* 刪除個人資訊 DELETE /users/:user_id */
 const deleteUserInfo = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: '成功' })
+  // successHandle({ res, message: '成功' })
 })
 
 /* 修改個人資訊 PATCH /users/:user_id */
