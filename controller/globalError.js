@@ -47,8 +47,8 @@ module.exports = (err, req, res, next) => {
 
   err.statusCode = err.statusCode ?? customeMessage.statusCode
   err.status = err.status ?? customeMessage.status
-  err.name = err.name
-  err.stack = err.stack
+  // err.name = err.name
+  // err.stack = err.stack
   console.log('err.status', err.status)
 
   if (err instanceof SyntaxError) setError(ApiState.SYNTAX_ERROR, err)

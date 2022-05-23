@@ -2,21 +2,35 @@ const mongoose = require('mongoose')
 
 const PostSchema = new mongoose.Schema(
   {
-    // 發文者名稱
-    userName: {
-      type: String,
-      required: [true, '發文者姓名為必填'],
+    // 使用者ID
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, '使用者ID為必填']
     },
 
-    // 發文內容
-    userContent: {
+    // 貼文內容
+    content: {
       type: String,
-      required: [true, '內容為必填'],
+      required: [true, '貼文內容為必填']
     },
 
-    // 使用者圖片
-    userPhoto: {
+    // 貼文圖片
+    image: {
       type: String,
+      default: ''
+    },
+
+    // 貼文留言
+    comments: {
+      type: Array,
+      default: []
+    },
+    
+    // 貼文按讚使用者
+    like_users_id: {
+      type: Array,
+      default: []
     },
 
     // 建立時間，轉為 Timestamp 以方便前端好處理
@@ -27,7 +41,7 @@ const PostSchema = new mongoose.Schema(
     // 更新時間，轉為 Timestamp 以方便前端好處理
     updatedAt: {
       type: Number,
-    },
+    }
   },
   {
     versionKey: false,
