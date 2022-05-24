@@ -53,11 +53,6 @@ const createComment = catchAsync(async (req, res, next) => {
   if (!userId) {
     return next(new AppError(ApiState.PERMISSION_DENIED))
   }
-  // 使用者資料 (為了拿到頭像XD)
-  const user = await User.findById(userId)
-  if (!user) {
-    return next(new AppError(ApiState.PERMISSION_DENIED))
-  }
   // 檢查貼文是否存在
   const post = await Post.findById(post_id)
   if (!post) {
@@ -68,13 +63,6 @@ const createComment = catchAsync(async (req, res, next) => {
     user: userId,
     post: post_id,
   })
-  // const comments = {
-  //   id: userId.toString() + Date.now(),
-  //   content,
-  //   createdAt: Date.now(),
-  //   updatedAt: Date.now(),
-  //   user,
-  // }
   successHandle({ res, message: 'createComment', data: newComment })
 })
 
