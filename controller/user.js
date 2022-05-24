@@ -25,6 +25,35 @@ const getCurrentUserInfo = catchAsync(async (req, res, next) => {
 
 /* 修改個人資訊PATCH/users/current-userinfo */
 const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
+  const user = req?.user
+  let { name, avatar, gender } = req.body
+  name = name?.trim()
+  avatar = avatar?.trim()
+  const editData = {}
+  if (!user) {
+    return next(AppError(ApiState.FAIL))
+  }
+  // 暱稱必填
+  if (!name || name?.length < 2) {
+    return next(AppError(ApiState.FIELD_MISSING))
+  }
+  editData.name = name
+  // 性別
+  if (gender) {
+    const sex = ['male', 'female']
+    if (!sex.some((item) => item === gender)) {
+      return next(AppError(ApiState.FIELD_MISSING))
+    }
+    editData.gender = gender
+  }
+  // 頭像
+  if (avatar) {
+    editData.avatar = avatar
+  }
+  const editUser = await User.findByIdAndUpdate(user?.id, editData)
+  if (editUser) {
+    return next(AppError(ApiState.FAIL))
+  }
   successHandle({ res, message: '修改個人資訊成功' })
 })
 
@@ -59,7 +88,36 @@ const deleteUserInfo = catchAsync(async (req, res, next) => {
 
 /* 修改個人資訊 PATCH /users/:user_id */
 const updateUserInfo = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: '成功' })
+  const userId = req.params?.user_id
+  let { name, avatar, gender } = req.body
+  name = name?.trim()
+  avatar = avatar?.trim()
+  const editData = {}
+  if (!userId) {
+    return next(AppError(ApiState.FAIL))
+  }
+  // 暱稱必填
+  if (!name || name?.toString()?.length < 2) {
+    return next(AppError(ApiState.FIELD_MISSING))
+  }
+  editData.name = name
+  // 性別
+  if (gender) {
+    const sex = ['male', 'female']
+    if (!sex.some((item) => item === gender)) {
+      return next(AppError(ApiState.FIELD_MISSING))
+    }
+    editData.gender = gender
+  }
+  // 頭像
+  if (avatar) {
+    editData.avatar = avatar
+  }
+  const editUser = await User.findByIdAndUpdate(userId, editData)
+  if (editUser) {
+    return next(AppError(ApiState.FAIL))
+  }
+  successHandle({ res, message: ApiState.SUCCESS })
 })
 
 module.exports = {
