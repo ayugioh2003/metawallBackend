@@ -29,7 +29,6 @@ const getComment = catchAsync(async (req, res, next) => {
   const post = await Post.findById(postId)
     .populate({
       path: 'comments',
-      select: 'content user',
     })
   if (!post) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))

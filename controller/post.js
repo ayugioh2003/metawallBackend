@@ -57,7 +57,6 @@ const getPostList = catchAsync(async (req, res, next) => {
   })
     .populate({
       path: 'comments',
-      select: 'content user',
     }).sort(timeSort)
 
   successHandle({ res, message: '取得貼文列表成功', data })
