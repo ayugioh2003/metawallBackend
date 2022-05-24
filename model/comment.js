@@ -42,5 +42,14 @@ const CommentSchema = new mongoose.Schema(
   },
 )
 
+CommentSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'user',
+    select: '_id name avatar createdAt',
+  })
+
+  next()
+})
+
 const Comment = mongoose.model('Comment', CommentSchema)
 module.exports = Comment

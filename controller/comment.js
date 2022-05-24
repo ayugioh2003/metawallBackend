@@ -1,5 +1,5 @@
 // Model
-// const Comment = require('../model/comment');
+const Comment = require('../model/comment')
 const User = require('../model/user')
 const Post = require('../model/post')
 // Utils
@@ -16,8 +16,8 @@ const ApiState = require('../utils/apiState')
 */
 
 /**
-  取得貼文留言	GET	/comments?post_id
-  // 可以先用這個 post_id 查查: 62851f947b754253e29aa062
+  取得貼文留言	GET	/comments/:post_id
+  // 可以先用這個 post_id 查查: 628bbfd84713ea5374dbbc8c
 */
 const getComment = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
@@ -27,10 +27,14 @@ const getComment = catchAsync(async (req, res, next) => {
   }
   // 找到貼文
   const post = await Post.findById(postId)
+    .populate({
+      path: 'comments',
+      select: 'content user',
+    })
   if (!post) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))
   }
-  successHandle({ res, message: 'getComment', data: post?.comments })
+  successHandle({ res, message: 'getComment', data: post.comments })
 })
 
 /**
@@ -50,7 +54,7 @@ const createComment = catchAsync(async (req, res, next) => {
     return next(new AppError(ApiState.PERMISSION_DENIED))
   }
   // 使用者資料 (為了拿到頭像XD)
-  const user = await User.findById(userId).select('id name avatar')
+  const user = await User.findById(userId)
   if (!user) {
     return next(new AppError(ApiState.PERMISSION_DENIED))
   }
@@ -59,15 +63,18 @@ const createComment = catchAsync(async (req, res, next) => {
   if (!post) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))
   }
-  const comments = {
-    id: userId.toString() + Date.now(),
+  const newComment = await Comment.create({
     content,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-    user,
-  }
-  post.comments.push(comments)
-  const newComment = await post.save()
+    user: userId,
+    post: post_id,
+  })
+  // const comments = {
+  //   id: userId.toString() + Date.now(),
+  //   content,
+  //   createdAt: Date.now(),
+  //   updatedAt: Date.now(),
+  //   user,
+  // }
   successHandle({ res, message: 'createComment', data: newComment })
 })
 
