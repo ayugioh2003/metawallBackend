@@ -43,18 +43,15 @@ const getPostList = catchAsync(async (req, res, next) => {
   // eslint-disable-next-line no-shadow
   const { query } = req
 
-  // 檢查 ObjectId 型別是否有誤
-  if (query.user_id && !checkObjectId(query.user_id)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
-
   const timeSort = query.sort === 'oldest' ? 'createdAt' : '-createdAt'
   const q = query.q ? { content: new RegExp(query.q) } : {}
   const userId = query.user_id ? { user: query.user_id } : {}
   const data = await Post.find({ ...userId, ...q }).populate({
     path: 'user',
     select: '_id name avatar',
-  }).sort(timeSort)
+  }).sort(timeSort).exec()
+
+  if(!data) return next(new AppError(ApiState.FIELD_MISSING))
 
   successHandle({ res, message: '取得貼文列表成功', data })
 })
@@ -96,17 +93,12 @@ const createPost = catchAsync(async (req, res, next) => {
 const getSinglePost = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
 
-  // 檢查 ObjectId 型別是否有誤
-  if (!checkObjectId(postId)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
-
   const data = await Post.findById(postId).populate({
     path: 'user',
     select: '_id name avatar',
   }).exec()
 
-  if (!data) return next(new AppError({ message: '查無貼文資料', statusCode: 400 }))
+  if (!data) return next(new AppError(DATA_NOT_EXIST))
 
   successHandle({ res, message: '取得單一貼文成功', data })
 })
@@ -118,17 +110,12 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
 
   if (!content) return next(new AppError(ApiState.FIELD_MISSING))
 
-  // 檢查 ObjectId 型別是否有誤
-  if (!checkObjectId(postId)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
-
   const data = await Post.findByIdAndUpdate(postId, {
     content: content,
     image: image
-  })
+  }).exec()
 
-  if (!data) return next(new AppError({ message: '查無貼文資料', statusCode: 400 }))
+  if (!data) return next(new AppError(DATA_NOT_EXIST))
 
   successHandle({ res, message: '修改單一貼文成功'})
 })
@@ -137,14 +124,9 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
 const deleteSinglePost = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
 
-  // 檢查 ObjectId 型別是否有誤
-  if (!checkObjectId(postId)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
+  const data = await Post.findByIdAndDelete(postId).exec()
 
-  const data = await Post.findByIdAndDelete(postId)
-
-  if (!data) return next(new AppError({ message: '查無貼文資料', statusCode: 400 }))
+  if (!data) return next(new AppError(DATA_NOT_EXIST))
 
   successHandle({ res, message: '刪除單一貼文成功' })
 })
