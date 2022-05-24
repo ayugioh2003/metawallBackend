@@ -54,7 +54,11 @@ const getPostList = catchAsync(async (req, res, next) => {
   const data = await Post.find({ ...userId, ...q }).populate({
     path: 'user',
     select: '_id name avatar',
-  }).sort(timeSort)
+  })
+    .populate({
+      path: 'comments',
+      select: 'content user',
+    }).sort(timeSort)
 
   successHandle({ res, message: '取得貼文列表成功', data })
 })
