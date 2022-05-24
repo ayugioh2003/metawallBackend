@@ -113,14 +113,40 @@ const getSinglePost = catchAsync(async (req, res, next) => {
 
 // 修改單一貼文 PATCH /posts/:post_id
 const updateSinglePost = catchAsync(async (req, res, next) => {
-  // TODO: 修改單一貼文 API
-  successHandle({ res, message: 'updateSinglePost' })
+  const postId = req.params.post_id
+  const { content, image } = req.body
+
+  if (!content) return next(new AppError(ApiState.FIELD_MISSING))
+
+  // 檢查 ObjectId 型別是否有誤
+  if (!checkObjectId(postId)) {
+    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
+  }
+
+  const data = await Post.findByIdAndUpdate(postId, {
+    content: content,
+    image: image
+  })
+
+  if (!data) return next(new AppError({ message: '查無貼文資料', statusCode: 400 }))
+
+  successHandle({ res, message: '修改單一貼文成功'})
 })
 
 // 刪除單一貼文 DELETE /posts/:post_id
 const deleteSinglePost = catchAsync(async (req, res, next) => {
-  // TODO: 刪除單一貼文 API
-  successHandle({ res, message: 'deleteSinglePost' })
+  const postId = req.params.post_id
+
+  // 檢查 ObjectId 型別是否有誤
+  if (!checkObjectId(postId)) {
+    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
+  }
+
+  const data = await Post.findByIdAndDelete(postId)
+
+  if (!data) return next(new AppError({ message: '查無貼文資料', statusCode: 400 }))
+
+  successHandle({ res, message: '刪除單一貼文成功' })
 })
 
 // 刪除所有貼文 DELETE /posts
