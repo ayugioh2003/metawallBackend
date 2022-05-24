@@ -8,6 +8,7 @@ router
   .route('/')
   .get(authController.isAuth, postController.getPost) // 取得貼文列表
   .post(authController.isAuth, postController.createPost) // 新增貼文
+  .delete(authController.isAuth, postController.deleteAllPost) // 新增貼文
 
 router
   .route('/:post_id')
