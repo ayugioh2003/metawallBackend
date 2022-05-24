@@ -17,7 +17,7 @@ const ApiState = require('../utils/apiState.js')
 const getCurrentUserInfo = catchAsync(async (req, res, next) => {
   const user = req?.user
   if (!user) {
-    return next(AppError(ApiState.FAIL))
+    return next(new AppError(ApiState.FAIL))
   }
   const userInfo = await User.findById(user?.id)
   return successHandle({ res, ...ApiState.SUCCESS, data: userInfo })
@@ -31,18 +31,18 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
   avatar = avatar?.trim()
   const editData = {}
   if (!user) {
-    return next(AppError(ApiState.FAIL))
+    return next(new AppError(ApiState.FAIL))
   }
   // 暱稱必填
   if (!name || name?.length < 2) {
-    return next(AppError(ApiState.FIELD_MISSING))
+    return next(new AppError(ApiState.FIELD_MISSING))
   }
   editData.name = name
   // 性別
   if (gender) {
     const sex = ['male', 'female']
     if (!sex.some((item) => item === gender)) {
-      return next(AppError(ApiState.FIELD_MISSING))
+      return next(new AppError(ApiState.FIELD_MISSING))
     }
     editData.gender = gender
   }
@@ -51,8 +51,8 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
     editData.avatar = avatar
   }
   const editUser = await User.findByIdAndUpdate(user?.id, editData)
-  if (editUser) {
-    return next(AppError(ApiState.FAIL))
+  if (!editUser) {
+    return next(new AppError(ApiState.FAIL))
   }
   successHandle({ res, message: '修改個人資訊成功' })
 })
@@ -71,7 +71,7 @@ const getUserInfo = catchAsync(async (req, res, next) => {
 const getUserList = catchAsync(async (req, res, next) => {
   const users = await User.find()
   if (!users) {
-    return next(AppError(ApiState.FAIL))
+    return next(new AppError(ApiState.FAIL))
   }
   return successHandle({ res, ...ApiState.SUCCESS, data: users })
 })
@@ -94,18 +94,18 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
   avatar = avatar?.trim()
   const editData = {}
   if (!userId) {
-    return next(AppError(ApiState.FAIL))
+    return next(new AppError(ApiState.FAIL))
   }
   // 暱稱必填
   if (!name || name?.toString()?.length < 2) {
-    return next(AppError(ApiState.FIELD_MISSING))
+    return next(new AppError(ApiState.FIELD_MISSING))
   }
   editData.name = name
   // 性別
   if (gender) {
     const sex = ['male', 'female']
     if (!sex.some((item) => item === gender)) {
-      return next(AppError(ApiState.FIELD_MISSING))
+      return next(new AppError(ApiState.FIELD_MISSING))
     }
     editData.gender = gender
   }
@@ -114,8 +114,8 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
     editData.avatar = avatar
   }
   const editUser = await User.findByIdAndUpdate(userId, editData)
-  if (editUser) {
-    return next(AppError(ApiState.FAIL))
+  if (!editUser) {
+    return next(new AppError(ApiState.FAIL))
   }
   successHandle({ res, message: ApiState.SUCCESS })
 })
