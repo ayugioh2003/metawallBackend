@@ -117,7 +117,7 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
 
   if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
 
-  successHandle({ res, message: '修改單一貼文成功'}, data)
+  successHandle({ res, message: '修改單一貼文成功', data})
 })
 
 // 刪除單一貼文 DELETE /posts/:post_id
