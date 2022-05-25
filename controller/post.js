@@ -98,7 +98,7 @@ const getSinglePost = catchAsync(async (req, res, next) => {
     select: '_id name avatar',
   }).exec()
 
-  if (!data) return next(new AppError(DATA_NOT_EXIST))
+  if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
 
   successHandle({ res, message: '取得單一貼文成功', data })
 })
@@ -113,11 +113,11 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
   const data = await Post.findByIdAndUpdate(postId, {
     content: content,
     image: image
-  }).exec()
+  },{ returnDocument: 'after', runValidators: true }).exec()
 
-  if (!data) return next(new AppError(DATA_NOT_EXIST))
+  if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
 
-  successHandle({ res, message: '修改單一貼文成功'})
+  successHandle({ res, message: '修改單一貼文成功'}, data)
 })
 
 // 刪除單一貼文 DELETE /posts/:post_id
@@ -126,7 +126,7 @@ const deleteSinglePost = catchAsync(async (req, res, next) => {
 
   const data = await Post.findByIdAndDelete(postId).exec()
 
-  if (!data) return next(new AppError(DATA_NOT_EXIST))
+  if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
 
   successHandle({ res, message: '刪除單一貼文成功' })
 })
