@@ -110,12 +110,16 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
 
   if (!content) return next(new AppError(ApiState.FIELD_MISSING))
 
-  const data = await Post.findByIdAndUpdate(postId, {
+  const data = await Post.findOneAndUpdate({_id:postId, user:req.user._id}, {
     content: content,
     image: image
   },{ returnDocument: 'after', runValidators: true }).exec()
 
-  if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
+  if (!data) return next(new AppError({
+    message: '資料不存在或使用者不符合',
+    status: ApiState.FAIL.status,
+    statusCode: ApiState.FAIL.statusCode,
+  }))
 
   successHandle({ res, message: '修改單一貼文成功', data})
 })
@@ -124,9 +128,13 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
 const deleteSinglePost = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
 
-  const data = await Post.findByIdAndDelete(postId).exec()
+  const data = await Post.findOneAndDelete({_id:postId, user:req.user._id}).exec()
 
-  if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
+  if (!data) return next(new AppError({
+    message: '資料不存在或使用者不符合',
+    status: ApiState.FAIL.status,
+    statusCode: ApiState.FAIL.statusCode,
+  }))
 
   successHandle({ res, message: '刪除單一貼文成功' })
 })
