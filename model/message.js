@@ -19,7 +19,7 @@ const MessageSchema = () => {
         type: Schema.Types.ObjectId,
         ref: 'User',
       },
-      chatroom: {
+      chatrooms: {
         type: Schema.Types.ObjectId,
         ref: 'Chatroom',
       },
