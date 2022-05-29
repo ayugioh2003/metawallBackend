@@ -7,6 +7,14 @@ const MessageSchema = () => {
         type: String,
         require: [true, '訊息內容需填寫'],
       },
+      type:{
+        type:String,
+        require:[true,'訊息種類必填'],
+        enum: {
+          values: ['global-message', 'notification'],
+          message: '僅接受 global-message, notification',
+        },
+      },
       userid: {
         type: Schema.Types.ObjectId,
         ref: 'User',
