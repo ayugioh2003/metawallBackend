@@ -15,11 +15,11 @@ const MessageSchema = () => {
           message: '僅接受 global-message, notification',
         },
       },
-      userid: {
+      user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
       },
-      chatroomid: {
+      chatroom: {
         type: Schema.Types.ObjectId,
         ref: 'Chatroom',
       },

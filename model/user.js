@@ -62,14 +62,14 @@ const UserSchema = new mongoose.Schema(
 
     // ws聊天室資料model
     // 存訊息ID
-    messageid: [
+    message: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Message',
       },
     ],
     // 存聊天室ID
-    chatroomid: [
+    chatroom: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Chatroom',

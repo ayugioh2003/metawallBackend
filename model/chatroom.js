@@ -6,13 +6,13 @@ const ChatroomSchema = () => {
       creator:{
         type:String,
       },
-      userid: [
+      user: [
         {
           type: Schema.Types.ObjectId,
           ref: 'User',
         },
       ],
-      messageid: [
+      message: [
         {
           type: Schema.Types.ObjectId,
           ref: 'Message',
