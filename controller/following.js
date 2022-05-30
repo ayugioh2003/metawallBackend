@@ -50,13 +50,16 @@ const createFollow = catchAsync(async (req, res, next) => {
 
   if (checkFollow.length > 0) return next(new AppError({ message: '已追蹤此用戶', statusCode: 400 }))
 
-  const data = await User.updateOne(
+  const data = await User.findOneAndUpdate(
     {
       _id: req.user.id,
-      'followers.user': { $ne: followId },
     },
     {
       $addToSet: { followings: { user: followId } },
+    },
+    {
+      returnDocument: 'after',
+      runValidators: true,
     },
   )
   successHandle({ res, message: '追蹤成功', data })
@@ -71,7 +74,7 @@ const deleteFollow = catchAsync(async (req, res, next) => {
     return next(new AppError({ message: '無法取消追蹤自己', statusCode: 400 }))
   }
 
-  const data = await User.updateOne(
+  const data = await User.findOneAndUpdate(
     {
       _id: req.user.id,
       'followings.user': followId,
@@ -81,7 +84,13 @@ const deleteFollow = catchAsync(async (req, res, next) => {
         followings: { user: followId },
       },
     },
+    {
+      returnDocument: 'after',
+      runValidators: true,
+    },
   )
+
+  if (!data) return next(new AppError({ message: '尚未追蹤此用戶', statusCode: 400 }))
   successHandle({ res, message: '取消追蹤成功', data })
 })
 
