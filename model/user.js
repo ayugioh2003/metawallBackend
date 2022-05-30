@@ -4,11 +4,11 @@ const validator = require('validator')
 /**
  * User Model
  * 用戶管理模組
-*/
+ */
 
 const UserSchema = new mongoose.Schema(
   {
-  // 暱稱
+    // 暱稱
     name: {
       type: String,
       required: [true, '暱稱為必填'],
@@ -54,11 +54,26 @@ const UserSchema = new mongoose.Schema(
     createdAt: {
       type: Number,
     },
-
     // 更新時間，轉為 Timestamp 以方便前端好處理
     updatedAt: {
       type: Number,
     },
+
+    // ws聊天室資料model
+    // 存訊息ID
+    messages: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Message',
+      },
+    ],
+    // 存聊天室ID
+    chatrooms: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Chatroom',
+      },
+    ],
   },
   {
     versionKey: false,

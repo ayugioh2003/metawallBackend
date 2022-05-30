@@ -11,6 +11,9 @@ router
   .delete(authController.isAuth, postController.deleteAllPost) // 新增貼文
 
 router
+  .get('/likes', authController.isAuth, postController.getCurrentUserLikesList) // 取得當前登入使用者點過讚的全部貼文
+
+router
   .route('/:post_id')
   .get(authController.isAuth, postController.getSinglePost) // 取得單一貼文
   .patch(authController.isAuth, postController.updateSinglePost) // 修改單一貼文
