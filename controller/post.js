@@ -46,16 +46,20 @@ const getPostList = catchAsync(async (req, res, next) => {
   const timeSort = query.sort === 'oldest' ? 'createdAt' : '-createdAt'
   const q = query.q ? { content: new RegExp(query.q) } : {}
   const userId = query.user_id ? { user: query.user_id } : {}
-  const data = await Post.find({ ...userId, ...q }).populate({
-    path: 'user',
-    select: '_id name avatar',
-  })
+  const data = await Post.find({ ...userId, ...q })
+    .populate({
+      path: 'user',
+      select: '_id name avatar',
+    })
     .populate({
       path: 'comments',
-    }).sort(timeSort)
-  }).sort(timeSort).exec()
+    })
+    .sort(timeSort)
+    .exec()
 
-  if(!data) return next(new AppError(ApiState.FIELD_MISSING))
+  if (!data) {
+    return next(new AppError(ApiState.FIELD_MISSING))
+  }
 
   successHandle({ res, message: '取得貼文列表成功', data })
 })
@@ -114,31 +118,35 @@ const updateSinglePost = catchAsync(async (req, res, next) => {
 
   if (!content) return next(new AppError(ApiState.FIELD_MISSING))
 
-  const data = await Post.findOneAndUpdate({_id:postId, user:req.user._id}, {
-    content: content,
-    image: image
-  },{ returnDocument: 'after', runValidators: true }).exec()
+  const data = await Post.findOneAndUpdate({ _id: postId, user: req.user._id }, {
+    content,
+    image,
+  }, { returnDocument: 'after', runValidators: true }).exec()
 
-  if (!data) return next(new AppError({
-    message: '資料不存在或使用者不符合',
-    status: ApiState.FAIL.status,
-    statusCode: ApiState.FAIL.statusCode,
-  }))
+  if (!data) {
+    return next(new AppError({
+      message: '資料不存在或使用者不符合',
+      status: ApiState.FAIL.status,
+      statusCode: ApiState.FAIL.statusCode,
+    }))
+  }
 
-  successHandle({ res, message: '修改單一貼文成功', data})
+  successHandle({ res, message: '修改單一貼文成功', data })
 })
 
 // 刪除單一貼文 DELETE /posts/:post_id
 const deleteSinglePost = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
 
-  const data = await Post.findOneAndDelete({_id:postId, user:req.user._id}).exec()
+  const data = await Post.findOneAndDelete({ _id: postId, user: req.user._id }).exec()
 
-  if (!data) return next(new AppError({
-    message: '資料不存在或使用者不符合',
-    status: ApiState.FAIL.status,
-    statusCode: ApiState.FAIL.statusCode,
-  }))
+  if (!data) {
+    return next(new AppError({
+      message: '資料不存在或使用者不符合',
+      status: ApiState.FAIL.status,
+      statusCode: ApiState.FAIL.statusCode,
+    }))
+  }
 
   successHandle({ res, message: '刪除單一貼文成功' })
 })
