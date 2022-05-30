@@ -38,7 +38,7 @@ const getComment = catchAsync(async (req, res, next) => {
 
 /**
   新增留言	POST	/comments
-  @bodyParam {string} post_id  貼文的ID
+  @bodyParam {string} post_id 貼文的ID
   @bodyParam {string} content comment的內文
 */
 const createComment = catchAsync(async (req, res, next) => {
@@ -67,8 +67,8 @@ const createComment = catchAsync(async (req, res, next) => {
 })
 
 /**
-  修改留言	PATCH	/comments
-  @bodyParam {string} post_id  貼文的ID
+  修改留言	PATCH	/comments/:comment_id
+  @bodyParam {string} post_id 貼文的ID
   @bodyParam {string} content 修改的內文
 */
 const updateComment = catchAsync(async (req, res, next) => {
@@ -102,7 +102,8 @@ const updateComment = catchAsync(async (req, res, next) => {
 })
 
 /**
-  刪除留言	DELETE	/comments
+  刪除留言	DELETE	/comments/:comment_id
+  @bodyParam {string} post_id 貼文的ID
 */
 const deleteComment = catchAsync(async (req, res, next) => {
   let { post_id } = req.body
