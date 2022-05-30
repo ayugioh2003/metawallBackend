@@ -21,12 +21,6 @@ const PostSchema = new mongoose.Schema(
       default: '',
     },
 
-    // 貼文留言
-    comments: {
-      type: Array,
-      default: [],
-    },
-
     // 貼文按讚使用者
     likes: [{
       type: mongoose.Schema.ObjectId,
@@ -48,8 +42,16 @@ const PostSchema = new mongoose.Schema(
     timestamps: {
       currentTime: () => Date.now(),
     },
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
 )
+
+PostSchema.virtual('comments', {
+  ref: 'Comment',
+  foreignField: 'post',
+  localField: '_id',
+})
 
 const Post = mongoose.model('Post', PostSchema)
 

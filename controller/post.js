@@ -49,6 +49,10 @@ const getPostList = catchAsync(async (req, res, next) => {
   const data = await Post.find({ ...userId, ...q }).populate({
     path: 'user',
     select: '_id name avatar',
+  })
+    .populate({
+      path: 'comments',
+    }).sort(timeSort)
   }).sort(timeSort).exec()
 
   if(!data) return next(new AppError(ApiState.FIELD_MISSING))
