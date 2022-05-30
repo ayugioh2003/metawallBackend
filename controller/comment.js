@@ -17,7 +17,7 @@ const ApiState = require('../utils/apiState')
 
 /**
   取得貼文留言	GET	/comments/:post_id
-  // 可以先用這個 post_id 查查: 628bbfd84713ea5374dbbc8c
+  // 可以先用這個 post_id 查查: 62936fa267318abadb12f354
 */
 const getComment = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
@@ -57,6 +57,7 @@ const createComment = catchAsync(async (req, res, next) => {
   if (!post) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))
   }
+  console.log(post)
   const newComment = await Comment.create({
     content,
     user: userId,
@@ -67,9 +68,37 @@ const createComment = catchAsync(async (req, res, next) => {
 
 /**
   修改留言	PATCH	/comments
+  @bodyParam {string} post_id  貼文的ID
+  @bodyParam {string} content 修改的內文
 */
 const updateComment = catchAsync(async (req, res, next) => {
-  successHandle({ res, message: ApiState.SUCCESS })
+  let { content, post_id } = req.body
+  const commentId = req.params.comment_id
+  const userId = req?.user?.id
+  // 必填欄位
+  content = content?.trim()
+  if(!content || !post_id) {
+    return next(new AppError(ApiState.FIELD_MISSING))
+  }
+  if(!userId) {
+    return next(new AppError(ApiState.PERMISSION_DENIED))
+  }
+  if(!commentId) {
+    return next(new AppError({ message: '未填入留言 ID', statusCode: 400 }))
+  }
+  // 檢查貼文是否存在
+  const post = await Post.findById(post_id)
+  if(!post) {
+    return next(new AppError(ApiState.DATA_NOT_EXIST))
+  }
+  // 更新
+  const newComment = await Comment.findOneAndUpdate(
+    { _id: commentId, post: post_id, user: userId },
+    { content },
+    { new: true }
+  )
+
+  successHandle({ res, message: 'updateComment', data: newComment })
 })
 
 /**
