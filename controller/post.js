@@ -129,6 +129,26 @@ const deleteAllPost = catchAsync(async (req, res, next) => {
   successHandle({ res, message: '刪除所有貼文成功' })
 })
 
+// 取得當前登入使用者點過讚的全部貼文 [GET] /posts/likes
+const getCurrentUserLikesList = catchAsync(async (req, res, next) => {
+  const likeList = await Post
+    .find({
+      likes: { $in: [req.user.id] },
+    })
+    .populate({
+      path: 'user',
+      select: '_id name email',
+    })
+
+  // 檢查資料是否存在
+  if (!likeList) return next(new AppError(ApiState.DATA_NOT_EXIST))
+
+  successHandle({
+    res,
+    data: likeList,
+  })
+})
+
 module.exports = {
   getPost,
   createPost,
@@ -136,4 +156,5 @@ module.exports = {
   updateSinglePost,
   deleteSinglePost,
   deleteAllPost,
+  getCurrentUserLikesList,
 }
