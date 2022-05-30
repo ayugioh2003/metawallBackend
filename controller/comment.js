@@ -105,6 +105,27 @@ const updateComment = catchAsync(async (req, res, next) => {
   刪除留言	DELETE	/comments
 */
 const deleteComment = catchAsync(async (req, res, next) => {
+  let { post_id } = req.body
+  const commentId = req.params.comment_id
+  const userId = req?.user?.id
+  // 必填欄位
+  if(!post_id) {
+    return next(new AppError(ApiState.FIELD_MISSING))
+  }
+  if(!userId) {
+    return next(new AppError(ApiState.PERMISSION_DENIED))
+  }
+  if(!commentId) {
+    return next(new AppError({ message: '未填入留言 ID', statusCode: 400 }))
+  }
+  // 檢查貼文是否存在
+  const post = await Post.findById(post_id)
+  if(!post) {
+    return next(new AppError(ApiState.DATA_NOT_EXIST))
+  }
+  // 刪除
+  const data = await Comment.findOneAndDelete({ _id: commentId, post: post_id, user: userId })
+
   successHandle({ res, message: 'deleteComment' })
 })
 
