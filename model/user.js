@@ -64,14 +64,14 @@ const UserSchema = new mongoose.Schema(
     // 存訊息ID
     messages: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Message',
       },
     ],
     // 存聊天室ID
     chatrooms: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Chatroom',
       },
     ],
@@ -81,7 +81,7 @@ const UserSchema = new mongoose.Schema(
     timestamps: {
       currentTime: () => Date.now(),
     },
-  }
+  },
 )
 
 const User = mongoose.model('User', UserSchema)
