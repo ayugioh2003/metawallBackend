@@ -34,6 +34,11 @@ const apiState = {
     message: '登入失敗',
     statusCode: 400,
   },
+  PERMISSION_DENIED: {
+    status: 7,
+    message: '權限不足',
+    statusCode: 403,
+  },
   ROUTER_NOT_FOUND: {
     status: 9000,
     message: '找不到路由',

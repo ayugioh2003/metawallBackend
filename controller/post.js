@@ -43,18 +43,23 @@ const getPostList = catchAsync(async (req, res, next) => {
   // eslint-disable-next-line no-shadow
   const { query } = req
 
-  // 檢查 ObjectId 型別是否有誤
-  if (query.user_id && !checkObjectId(query.user_id)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
-
   const timeSort = query.sort === 'oldest' ? 'createdAt' : '-createdAt'
   const q = query.q ? { content: new RegExp(query.q) } : {}
   const userId = query.user_id ? { user: query.user_id } : {}
-  const data = await Post.find({ ...userId, ...q }).populate({
-    path: 'user',
-    select: '_id name avatar',
-  }).sort(timeSort)
+  const data = await Post.find({ ...userId, ...q })
+    .populate({
+      path: 'user',
+      select: '_id name avatar',
+    })
+    .populate({
+      path: 'comments',
+    })
+    .sort(timeSort)
+    .exec()
+
+  if (!data) {
+    return next(new AppError(ApiState.FIELD_MISSING))
+  }
 
   successHandle({ res, message: '取得貼文列表成功', data })
 })
@@ -96,37 +101,80 @@ const createPost = catchAsync(async (req, res, next) => {
 const getSinglePost = catchAsync(async (req, res, next) => {
   const postId = req.params.post_id
 
-  // 檢查 ObjectId 型別是否有誤
-  if (!checkObjectId(postId)) {
-    return next(new AppError({ message: 'ID格式錯誤', statusCode: 400 }))
-  }
-
   const data = await Post.findById(postId).populate({
     path: 'user',
     select: '_id name avatar',
   }).exec()
 
-  if (!data) return next(new AppError({ message: '查無貼文資料', statusCode: 400 }))
+  if (!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
 
   successHandle({ res, message: '取得單一貼文成功', data })
 })
 
 // 修改單一貼文 PATCH /posts/:post_id
 const updateSinglePost = catchAsync(async (req, res, next) => {
-  // TODO: 修改單一貼文 API
-  successHandle({ res, message: 'updateSinglePost' })
+  const postId = req.params.post_id
+  const { content, image } = req.body
+
+  if (!content) return next(new AppError(ApiState.FIELD_MISSING))
+
+  const data = await Post.findOneAndUpdate({ _id: postId, user: req.user._id }, {
+    content,
+    image,
+  }, { returnDocument: 'after', runValidators: true }).exec()
+
+  if (!data) {
+    return next(new AppError({
+      message: '資料不存在或使用者不符合',
+      status: ApiState.FAIL.status,
+      statusCode: ApiState.FAIL.statusCode,
+    }))
+  }
+
+  successHandle({ res, message: '修改單一貼文成功', data })
 })
 
 // 刪除單一貼文 DELETE /posts/:post_id
 const deleteSinglePost = catchAsync(async (req, res, next) => {
-  // TODO: 刪除單一貼文 API
-  successHandle({ res, message: 'deleteSinglePost' })
+  const postId = req.params.post_id
+
+  const data = await Post.findOneAndDelete({ _id: postId, user: req.user._id }).exec()
+
+  if (!data) {
+    return next(new AppError({
+      message: '資料不存在或使用者不符合',
+      status: ApiState.FAIL.status,
+      statusCode: ApiState.FAIL.statusCode,
+    }))
+  }
+
+  successHandle({ res, message: '刪除單一貼文成功' })
 })
 
 // 刪除所有貼文 DELETE /posts
 const deleteAllPost = catchAsync(async (req, res, next) => {
   await Post.deleteMany()
   successHandle({ res, message: '刪除所有貼文成功' })
+})
+
+// 取得當前登入使用者點過讚的全部貼文 [GET] /posts/likes
+const getCurrentUserLikesList = catchAsync(async (req, res, next) => {
+  const likeList = await Post
+    .find({
+      likes: { $in: [req.user.id] },
+    })
+    .populate({
+      path: 'user',
+      select: '_id name email',
+    })
+
+  // 檢查資料是否存在
+  if (!likeList) return next(new AppError(ApiState.DATA_NOT_EXIST))
+
+  successHandle({
+    res,
+    data: likeList,
+  })
 })
 
 module.exports = {
@@ -136,4 +184,5 @@ module.exports = {
   updateSinglePost,
   deleteSinglePost,
   deleteAllPost,
+  getCurrentUserLikesList,
 }

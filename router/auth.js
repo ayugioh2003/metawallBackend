@@ -1,4 +1,5 @@
 const express = require('express')
+const { isAuth } = require('../controller/auth.js')
 
 const router = express.Router()
 // utils
@@ -14,7 +15,7 @@ router.post('/login', authController.login)
 // 登出
 router.post('/logout', authController.logout)
 // 修改密碼
-router.post('/reset-password', authController.resetPassword)
+router.patch('/reset-password', isAuth, authController.resetPassword)
 // 驗證token
 router.get('/check', authController.checkToken)
 
