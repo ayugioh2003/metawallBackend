@@ -5,6 +5,8 @@ const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const { successHandle } = require('../utils/resHandle.js')
 const ApiState = require('../utils/apiState.js')
+const { checkPassword } = require('./auth.js')
+const { hashPassword } = require('../utils/hash.js')
 
 /*
   res 回傳錯誤範例
@@ -28,16 +30,18 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
   avatar = avatar?.trim()
   const editData = {}
   // 暱稱必填
-  if (!name || name?.length < 2) {
+  if (name !== undefined && (!name || name?.length < 2)) {
     return next(new AppError({
       statusCode: ApiState.FIELD_MISSING.statusCode,
       status: ApiState.FIELD_MISSING.status,
       message: '暱稱為必填，且至少為兩字元',
     }))
   }
-  editData.name = name
+  if (name !== undefined) {
+    editData.name = name
+  }
   // 性別
-  if (gender) {
+  if (gender !== undefined) {
     const sex = ['male', 'female']
     if (!sex.some((item) => item === gender)) {
       return next(new AppError({
@@ -49,7 +53,7 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
     editData.gender = gender
   }
   // 頭像
-  if (avatar) {
+  if (avatar !== undefined) {
     editData.avatar = avatar
   }
   const editUser = await User.findByIdAndUpdate(user?.id, editData, { returnDocument: 'after', runValidators: true })
@@ -99,16 +103,18 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
     return next(new AppError(ApiState.ROUTER_NOT_FOUND))
   }
   // 暱稱必填
-  if (!name || name?.toString()?.length < 2) {
+  if (name !== undefined && (!name || name?.toString()?.length < 2)) {
     return next(new AppError({
       statusCode: ApiState.FIELD_MISSING.statusCode,
       status: ApiState.FIELD_MISSING.status,
       message: '暱稱為必填，且至少為兩字元',
     }))
   }
-  editData.name = name
+  if (name !== undefined) {
+    editData.name = name
+  }
   // 性別
-  if (gender) {
+  if (gender !== undefined) {
     const sex = ['male', 'female']
     if (!sex.some((item) => item === gender)) {
       return next(new AppError({
@@ -120,7 +126,7 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
     editData.gender = gender
   }
   // 頭像
-  if (avatar) {
+  if (avatar !== undefined) {
     editData.avatar = avatar
   }
   const editUser = await User.findByIdAndUpdate(userId, editData, { returnDocument: 'after', runValidators: true })
@@ -128,6 +134,49 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
     return next(new AppError(ApiState.FAIL))
   }
   successHandle({ res, message: ApiState.SUCCESS, data: editUser })
+})
+
+/*
+  修改密碼 PATCH /reset-password
+*/
+const resetPassword = catchAsync(async (req, res, next) => {
+  const { user } = req
+  const { password, confirmPassword } = req.body
+  if (!password || !confirmPassword) {
+    return next(
+      new AppError({
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+        status: ApiState.FIELD_MISSING.status,
+        message: '新密碼及再次確認新密碼為必填項目',
+      }),
+    )
+  }
+  if (!checkPassword(req.body.password)) {
+    return next(
+      new AppError({
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+        status: ApiState.FIELD_MISSING.status,
+        message: '密碼格式錯誤，需包含至少一個英文字與數字，密碼八碼以上',
+      }),
+    )
+  }
+  if (password !== confirmPassword) {
+    return next(
+      new AppError({
+        statusCode: ApiState.FAIL.statusCode,
+        status: ApiState.FAIL.status,
+        message: '新密碼及再次確認新密碼不一致',
+      }),
+    )
+  }
+  const newPassword = hashPassword(password)
+  const editUser = await User.findByIdAndUpdate(user?.id, { password: newPassword }, { returnDocument: 'after', runValidators: true })
+  if (!editUser) {
+    return next(
+      new AppError(ApiState.UPDATE_FAILED),
+    )
+  }
+  successHandle({ res, message: '修改密碼成功', data: editUser })
 })
 
 module.exports = {
@@ -138,4 +187,5 @@ module.exports = {
   createUserInfo,
   deleteUserInfo,
   updateUserInfo,
+  resetPassword,
 }
