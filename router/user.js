@@ -14,6 +14,10 @@ router
   .patch(isAuth, userController.updateCurrentUserInfo) // 修改個人資訊
 
 router
+  .route('/reset-password')
+  .patch(isAuth, userController.resetPassword)// 修改密碼
+
+router
   .route('/:user_id')
   .get(isAuth, userController.getUserInfo) // 取得個人資訊
   .post(isAuth, userController.createUserInfo) // 新增個人資訊

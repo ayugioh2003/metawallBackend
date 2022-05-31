@@ -5,6 +5,8 @@ const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const { successHandle } = require('../utils/resHandle.js')
 const ApiState = require('../utils/apiState.js')
+const { checkPassword } = require('./auth.js')
+const { hashPassword } = require('../utils/hash.js')
 
 /*
   res 回傳錯誤範例
@@ -134,6 +136,49 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
   successHandle({ res, message: ApiState.SUCCESS, data: editUser })
 })
 
+/*
+  修改密碼 PATCH /reset-password
+*/
+const resetPassword = catchAsync(async (req, res, next) => {
+  const { user } = req
+  const { password, confirmPassword } = req.body
+  if (!password || !confirmPassword) {
+    return next(
+      new AppError({
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+        status: ApiState.FIELD_MISSING.status,
+        message: '新密碼及再次確認新密碼為必填項目',
+      }),
+    )
+  }
+  if (!checkPassword(req.body.password)) {
+    return next(
+      new AppError({
+        statusCode: ApiState.FIELD_MISSING.statusCode,
+        status: ApiState.FIELD_MISSING.status,
+        message: '密碼格式錯誤，需包含至少一個英文字與數字，密碼八碼以上',
+      }),
+    )
+  }
+  if (password !== confirmPassword) {
+    return next(
+      new AppError({
+        statusCode: ApiState.FAIL.statusCode,
+        status: ApiState.FAIL.status,
+        message: '新密碼及再次確認新密碼不一致',
+      }),
+    )
+  }
+  const newPassword = hashPassword(password)
+  const editUser = await User.findByIdAndUpdate(user?.id, { password: newPassword }, { returnDocument: 'after', runValidators: true })
+  if (!editUser) {
+    return next(
+      new AppError(ApiState.UPDATE_FAILED),
+    )
+  }
+  successHandle({ res, message: '修改密碼成功', data: editUser })
+})
+
 module.exports = {
   getUserInfo,
   getCurrentUserInfo,
@@ -142,4 +187,5 @@ module.exports = {
   createUserInfo,
   deleteUserInfo,
   updateUserInfo,
+  resetPassword,
 }

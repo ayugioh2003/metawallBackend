@@ -14,8 +14,6 @@ router.post('/signup', authController.signup)
 router.post('/login', authController.login)
 // 登出
 router.post('/logout', authController.logout)
-// 修改密碼
-router.patch('/reset-password', isAuth, authController.resetPassword)
 // 驗證token
 router.get('/check', authController.checkToken)
 
