@@ -28,16 +28,18 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
   avatar = avatar?.trim()
   const editData = {}
   // 暱稱必填
-  if (!name || name?.length < 2) {
+  if (name !== undefined && (!name || name?.length < 2)) {
     return next(new AppError({
       statusCode: ApiState.FIELD_MISSING.statusCode,
       status: ApiState.FIELD_MISSING.status,
       message: '暱稱為必填，且至少為兩字元',
     }))
   }
-  editData.name = name
+  if (name !== undefined) {
+    editData.name = name
+  }
   // 性別
-  if (gender) {
+  if (gender !== undefined) {
     const sex = ['male', 'female']
     if (!sex.some((item) => item === gender)) {
       return next(new AppError({
@@ -49,7 +51,7 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
     editData.gender = gender
   }
   // 頭像
-  if (avatar) {
+  if (avatar !== undefined) {
     editData.avatar = avatar
   }
   const editUser = await User.findByIdAndUpdate(user?.id, editData, { returnDocument: 'after', runValidators: true })
@@ -99,16 +101,18 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
     return next(new AppError(ApiState.ROUTER_NOT_FOUND))
   }
   // 暱稱必填
-  if (!name || name?.toString()?.length < 2) {
+  if (name !== undefined && (!name || name?.toString()?.length < 2)) {
     return next(new AppError({
       statusCode: ApiState.FIELD_MISSING.statusCode,
       status: ApiState.FIELD_MISSING.status,
       message: '暱稱為必填，且至少為兩字元',
     }))
   }
-  editData.name = name
+  if (name !== undefined) {
+    editData.name = name
+  }
   // 性別
-  if (gender) {
+  if (gender !== undefined) {
     const sex = ['male', 'female']
     if (!sex.some((item) => item === gender)) {
       return next(new AppError({
@@ -120,7 +124,7 @@ const updateUserInfo = catchAsync(async (req, res, next) => {
     editData.gender = gender
   }
   // 頭像
-  if (avatar) {
+  if (avatar !== undefined) {
     editData.avatar = avatar
   }
   const editUser = await User.findByIdAndUpdate(userId, editData, { returnDocument: 'after', runValidators: true })
