@@ -47,9 +47,18 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String,
       required: false,
-      default: '',
+      default: ' ',
     },
 
+    // 追蹤名單
+    followings: [
+      {
+        user: { type: mongoose.Schema.ObjectId, ref: 'User' },
+        createdAt: {
+          type: Number,
+        },
+      },
+    ],
     // 建立時間，轉為 Timestamp 以方便前端好處理
     createdAt: {
       type: Number,
