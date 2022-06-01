@@ -124,8 +124,10 @@ const deleteComment = catchAsync(async (req, res, next) => {
   if(!post) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))
   }
+
   // 刪除
   const data = await Comment.findOneAndDelete({ _id: commentId, post: post_id, user: userId })
+  if(!data) return next(new AppError(ApiState.DATA_NOT_EXIST))
 
   successHandle({ res, message: 'deleteComment' })
 })
