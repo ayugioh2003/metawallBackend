@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
+/* eslint-disable */
 const mongoose = require('mongoose')
 
 // 遠端資料庫
@@ -8,8 +7,8 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD,
 )
 
-// 連接本地資料庫
-const localDB = process.env.DATABASE_LOCAL
+// 連接本地資料庫，這裡留著是方便本地開發切換使用，故不刪除先註解
+// const localDB = process.env.DATABASE_LOCAL
 
 const connectDB = async () => {
   try {
