@@ -49,7 +49,7 @@ const login = catchAsync(async (req, res, next) => {
     email: memberData.email,
     password: memberData.password,
   })
-    .populate({ path: 'messages' })
+    .populate({ path: 'messages', select: 'content type user createdAt' })
     .exec((findErr, findRes) => {
       if (findErr) {
         return next(

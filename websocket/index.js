@@ -28,7 +28,16 @@ const wsServer = (expressServer) => {
 
       websocketConnection.on('message', async (message) => {
         const msgData = JSON.parse(message)
-
+        // console.log(msgData)
+        // 訊息加入資料庫
+        const result = await Message.create({
+          content: msgData.content,
+          type: msgData.type,
+          user: msgData.user.id,
+        })
+        console.log(result)
+        // const test = await Message.find()
+        // console.log(test)
         wsUser.forEach((item) => {
           item.ws.send(JSON.stringify(msgData))
         })

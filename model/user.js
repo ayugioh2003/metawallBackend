@@ -70,12 +70,12 @@ const UserSchema = new mongoose.Schema(
 
     // ws聊天室資料model
     // 存訊息ID
-    messages: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Message',
-      },
-    ],
+    // messages: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'Message',
+    //   },
+    // ],
     // 存聊天室ID
     chatrooms: [
       {
@@ -89,8 +89,16 @@ const UserSchema = new mongoose.Schema(
     timestamps: {
       currentTime: () => Date.now(),
     },
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
 )
+
+UserSchema.virtual('messages', {
+  ref: 'Message',
+  foreignField: 'user',
+  localField: '_id',
+})
 
 const User = mongoose.model('User', UserSchema)
 
