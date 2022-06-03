@@ -4,6 +4,7 @@
 const WebSocket = require('ws')
 
 const wsServer = (expressServer) => {
+  // 存連線進來的使用者資訊
   const wsUser = []
 
   // 建立新的ws伺服器
