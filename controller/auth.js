@@ -48,53 +48,55 @@ const login = catchAsync(async (req, res, next) => {
   User.findOne({
     email: memberData.email,
     password: memberData.password,
-  }).exec((findErr, findRes) => {
-    if (findErr) {
-      return next(
-        new AppError({
-          message: findErr.message,
-          statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
-        }),
-      )
-    }
-
-    // find 沒找到東西的 res 是 null
-    if (findRes === null) {
-      return next(
-        new AppError({
-          message: '帳號密碼錯誤',
-          statusCode: ApiState.LOGIN_FAILED.statusCode,
-        }),
-      )
-    }
-
-    const token = jwt.sign(
-      // data的內容可以在登入解密出來
-      {
-        id: findRes._id,
-      },
-      // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
-      // 驗證的時候要用一樣的字串去解 不然會算不出原本的資料
-      process.env.SECRET,
-      {
-        algorithm: 'HS256', // 加密方式
-        // 多久之後到期 60一分鐘到期 60*60一小時
-        // 也可以不用exp直接在secret後面加上{ expiresIn: '1h' }
-        // exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        expiresIn: process.env.EXPIRES_IN,
-      },
-    )
-
-    res.setHeader('token', token)
-    return successHandle({
-      res,
-      message: '登入成功',
-      data: {
-        user: findRes,
-        token,
-      },
-    })
   })
+    .populate({ path: 'messages' })
+    .exec((findErr, findRes) => {
+      if (findErr) {
+        return next(
+          new AppError({
+            message: findErr.message,
+            statusCode: ApiState.INTERNAL_SERVER_ERROR.statusCode,
+          }),
+        )
+      }
+
+      // find 沒找到東西的 res 是 null
+      if (findRes === null) {
+        return next(
+          new AppError({
+            message: '帳號密碼錯誤',
+            statusCode: ApiState.LOGIN_FAILED.statusCode,
+          }),
+        )
+      }
+
+      const token = jwt.sign(
+        // data的內容可以在登入解密出來
+        {
+          id: findRes._id,
+        },
+        // 給jwt一個字串當作加密編碼參考 需要隱藏起來 否則會有被反推的機會
+        // 驗證的時候要用一樣的字串去解 不然會算不出原本的資料
+        process.env.SECRET,
+        {
+          algorithm: 'HS256', // 加密方式
+          // 多久之後到期 60一分鐘到期 60*60一小時
+          // 也可以不用exp直接在secret後面加上{ expiresIn: '1h' }
+          // exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          expiresIn: process.env.EXPIRES_IN,
+        },
+      )
+
+      res.setHeader('token', token)
+      return successHandle({
+        res,
+        message: '登入成功',
+        data: {
+          user: findRes,
+          token,
+        },
+      })
+    })
 })
 
 /*

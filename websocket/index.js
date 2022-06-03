@@ -2,6 +2,9 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unsafe-optional-chaining */
 const WebSocket = require('ws')
+const Message = require('../model/message.js')
+
+const catchAsync = require('../utils/catchAsync.js')
 
 const wsServer = (expressServer) => {
   // 存連線進來的使用者資訊
