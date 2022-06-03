@@ -35,9 +35,6 @@ const wsServer = (expressServer) => {
           type: msgData.type,
           user: msgData.user.id,
         })
-        console.log(result)
-        // const test = await Message.find()
-        // console.log(test)
         wsUser.forEach((item) => {
           item.ws.send(JSON.stringify(msgData))
         })
