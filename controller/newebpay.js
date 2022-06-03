@@ -21,7 +21,7 @@ dotenv.config({ path: './.env' })
 // 產生訂單資訊
 const createPayment = catchAsync(async (req, res, next) => {
   const {
-    Amt, Desc, Comment, user_id, login_user_id,
+    Amt, Desc, Comment, user_id,
   } = req.body
 
   if (typeof Amt !== 'number') {

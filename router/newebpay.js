@@ -9,7 +9,7 @@ router
   .post(isAuth, newebpayController.createPayment) // 產生訂單資訊
 
 router
-  .route('/returnURL')
+  .route('/return-url')
   .get(newebpayController.returnURL)
   .post(newebpayController.returnURL)
 

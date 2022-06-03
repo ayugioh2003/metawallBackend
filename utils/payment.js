@@ -3,15 +3,13 @@ const dotenv = require('dotenv')
 
 dotenv.config({ path: './.env' })
 
-const { BACKEND_URL } = process.env
-const { FRONTEND_URL } = process.env
-const MerchantID = process.env.MERCHANT_ID
-const HashKey = process.env.HASH_KEY
-const HashIV = process.env.HASH_IV
+const {
+  BACKEND_URL, FRONTEND_URL, MERCHANT_ID: MerchantID, HASH_KEY: HashKey, HASH_IV: HashIV,
+} = process.env
 
 const PayGateWay = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 // const ReturnURL = `${FRONTEND_URL}/?from=returnURL`
-const ReturnURL = `${BACKEND_URL}/api/newebpay/returnURL`
+const ReturnURL = `${BACKEND_URL}/api/newebpay/return-url`
 const NotifyURL = `${BACKEND_URL}/api/notifyURL`
 // const ReturnURL = URL + '/newebpay/callback?from=ReturnURL'
 // const ClientBackURL = URL + '/orders'
@@ -20,9 +18,9 @@ let data
 
 function genDataChain(TradeInfo) {
   const results = []
-  for (const kv of Object.entries(TradeInfo)) {
+  Object.entries(TradeInfo).forEach((kv) => {
     results.push(`${kv[0]}=${kv[1]}`)
-  }
+  })
   return results.join('&')
 }
 
@@ -60,8 +58,6 @@ module.exports = {
       OrderComment: Comment || 'OrderComment',
       LangType: 'zh-tw',
     }
-
-    console.log('data', data)
 
     const mpgAesEncrypt = encryptTradeInfoAES(data)
     const mpgShaEncrypt = hashTradeInfoSHA(mpgAesEncrypt)
