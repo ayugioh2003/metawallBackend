@@ -4,7 +4,7 @@
 const WebSocket = require('ws')
 
 const wsServer = (expressServer) => {
-  // const wsUser = []
+  const wsUser = []
 
   // 建立新的ws伺服器
   const websocketServer = new WebSocket.Server({
@@ -20,13 +20,13 @@ const wsServer = (expressServer) => {
       console.log(`目前連線人數 : ${websocketServer._server._connections}`)
       websocketConnection.userid = params
 
-      // wsUser.push({ userid: params, ws: websocketConnection })
+      wsUser.push({ userid: params, ws: websocketConnection })
 
       websocketConnection.on('message', async (message) => {
         const msgData = JSON.parse(message)
 
-        websocketServer.clients.forEach((client) => {
-          client.send(JSON.stringify(msgData))
+        wsUser.forEach((item) => {
+          item.ws.send(JSON.stringify(msgData))
         })
       })
     },
