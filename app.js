@@ -21,6 +21,7 @@ const paymentRouter = require('./router/payment.js')
 const orderRouter = require('./router/order.js')
 const uploadRouter = require('./router/upload.js')
 const newebpayRouter = require('./router/newebpay.js')
+const messageRouter = require('./router/message.js')
 
 // Controller
 const globalErrorHandler = require('./controller/globalError.js')
@@ -54,6 +55,7 @@ app.use('/api/payment', paymentRouter)
 app.use('/api/orders', orderRouter)
 app.use('/api/upload', uploadRouter)
 app.use('/api/newebpay', newebpayRouter)
+app.use('/api/messages', messageRouter)
 
 // 無此路由
 app.use('*', (req, res, next) => {
