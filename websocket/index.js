@@ -16,10 +16,10 @@ const wsServer = (expressServer) => {
     'connection',
     async (websocketConnection, connectionRequest) => {
       const [_path, params] = connectionRequest?.url?.split('?')
+      const user = params.split('=')[1]
       console.log(_path)
-      console.log(params)
       console.log(`目前連線人數 : ${websocketServer._server._connections}`)
-      websocketConnection.userid = params
+      websocketConnection.userid = user
 
       wsUser.push({ userid: params, ws: websocketConnection })
 
