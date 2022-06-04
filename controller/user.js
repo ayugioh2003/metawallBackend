@@ -19,6 +19,10 @@ const { hashPassword } = require('../utils/hash.js')
 const getCurrentUserInfo = catchAsync(async (req, res, next) => {
   const user = req?.user
   const userInfo = await User.findById(user?.id)
+    .populate({
+      path: 'messages',
+      select: '_id content createdAt',
+    })
   return successHandle({ res, ...ApiState.SUCCESS, data: userInfo })
 })
 
@@ -66,7 +70,11 @@ const updateCurrentUserInfo = catchAsync(async (req, res, next) => {
 /* 取得個人資訊 GET/users/:user_id */
 const getUserInfo = catchAsync(async (req, res, next) => {
   const userId = req.params.user_id
-  const user = await User.findById(userId).select('_id name avatar')
+  const user = await User.findById(userId)
+    .select('_id name avatar').populate({
+      path: 'messages',
+      select: '_id content createdAt',
+    })
   if (!user) {
     return next(new AppError(ApiState.DATA_NOT_EXIST))
   }
@@ -76,6 +84,10 @@ const getUserInfo = catchAsync(async (req, res, next) => {
 /* 取得用戶列表GET/users */
 const getUserList = catchAsync(async (req, res, next) => {
   const users = await User.find()
+    .populate({
+      path: 'messages',
+      select: '_id content createdAt',
+    })
   if (!users) {
     return next(new AppError(ApiState.FAIL))
   }
