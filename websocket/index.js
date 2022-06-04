@@ -2,6 +2,9 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unsafe-optional-chaining */
 const WebSocket = require('ws')
+const Message = require('../model/message.js')
+
+const catchAsync = require('../utils/catchAsync.js')
 
 const wsServer = (expressServer) => {
   // 存連線進來的使用者資訊
@@ -25,7 +28,13 @@ const wsServer = (expressServer) => {
 
       websocketConnection.on('message', async (message) => {
         const msgData = JSON.parse(message)
-
+        // console.log(msgData)
+        // 訊息加入資料庫
+        const result = await Message.create({
+          content: msgData.content,
+          type: msgData.type,
+          user: msgData.user.id,
+        })
         wsUser.forEach((item) => {
           item.ws.send(JSON.stringify(msgData))
         })
