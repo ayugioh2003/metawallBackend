@@ -10,6 +10,9 @@ router.get('/:post_id', isAuth, commentController.getComment) // 取得貼文留
 router
   .route('/')
   .post(isAuth, commentController.createComment) // 新增留言
+
+router
+  .route('/:comment_id')
   .patch(isAuth, commentController.updateComment) // 修改留言
   .delete(isAuth, commentController.deleteComment) // 刪除留言
 
