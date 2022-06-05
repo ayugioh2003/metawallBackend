@@ -33,7 +33,7 @@ const wsServer = (expressServer) => {
         const result = await Message.create({
           content: msgData.content,
           type: msgData.type,
-          user: msgData.user.id,
+          user: msgData.user._id,
         })
         wsUser.forEach((item) => {
           item.ws.send(JSON.stringify(msgData))
