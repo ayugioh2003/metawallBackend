@@ -28,7 +28,6 @@ const wsServer = (expressServer) => {
 
       websocketConnection.on('message', async (message) => {
         const msgData = JSON.parse(message)
-        // console.log(msgData)
         // 訊息加入資料庫
         const result = await Message.create({
           content: msgData.content,

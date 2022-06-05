@@ -12,9 +12,9 @@ const getMessages = catchAsync(async (req, res, next) => {
   const message = await Message.find()
     .populate({
       path: 'user',
+      select: '_id name avatar',
     })
   if (!message) return next(new AppError(ApiState.DATA_NOT_EXIST))
-  console.log(message)
   successHandle({
     res,
     data: {
