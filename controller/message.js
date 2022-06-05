@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Utils
 const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
@@ -14,7 +15,7 @@ const getMessages = catchAsync(async (req, res, next) => {
       select: '_id name avatar',
     })
   if (!message) return next(new AppError(ApiState.DATA_NOT_EXIST))
-
+  console.log(message)
   successHandle({
     res,
     data: {
