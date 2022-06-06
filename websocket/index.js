@@ -4,24 +4,27 @@
 const WebSocket = require('ws')
 const Message = require('../model/message.js')
 
-const catchAsync = require('../utils/catchAsync.js')
-
 const wsServer = (expressServer) => {
   // 存連線進來的使用者資訊
   const wsUser = []
 
   // 建立新的ws伺服器
   const websocketServer = new WebSocket.Server({
-    server: expressServer,
+    // server: expressServer,
+    noServer: true,
   })
-
+  // 即時訊息
+  const realtimePost = new WebSocket.Server({
+    // Server: expressServer,
+    noServer: true,
+  })
   websocketServer.on(
     'connection',
     async (websocketConnection, connectionRequest) => {
       const [_path, params] = connectionRequest?.url?.split('?')
       const user = params.split('=')[1]
       console.log(_path)
-      console.log(`目前連線人數 : ${websocketServer._server._connections}`)
+      // console.log(`目前連線人數 : ${websocketServer._server._connections}`)
       websocketConnection.userid = user
 
       wsUser.push({ userid: params, ws: websocketConnection })
@@ -40,6 +43,37 @@ const wsServer = (expressServer) => {
       })
     },
   )
+  // 即時訊息
+  realtimePost.on(
+    'connection',
+    async (websocketConnection, connectionRequest) => {
+      const [_path, params] = connectionRequest?.url?.split('?')
+      console.log(_path)
+      websocketConnection.on('message', async (message) => {
+        const msgData = JSON.parse(message)
+
+        wsUser.forEach((item) => {
+          item.ws.send(JSON.stringify(msgData))
+        })
+      })
+    },
+  )
+
+  // 路由
+  expressServer.on('upgrade', (request, socket, head) => {
+    const [_path, params] = request?.url?.split('?')
+    if (_path === '/') {
+      websocketServer.handleUpgrade(request, socket, head, (ws) => {
+        websocketServer.emit('connection', ws, request)
+      })
+    } else if (_path === '/realtimepost') {
+      realtimePost.handleUpgrade(request, socket, head, (ws) => {
+        realtimePost.emit('connection', ws, request)
+      })
+    } else {
+      socket.destroy()
+    }
+  })
 
   return websocketServer
 }
