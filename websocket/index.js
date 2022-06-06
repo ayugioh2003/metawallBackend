@@ -7,7 +7,7 @@ const Message = require('../model/message.js')
 const wsServer = (expressServer) => {
   // 存連線進來的使用者資訊
   const wsUser = []
-
+  const realtimeWs = []
   // 建立新的ws伺服器
   const websocketServer = new WebSocket.Server({
     // server: expressServer,
@@ -27,8 +27,7 @@ const wsServer = (expressServer) => {
       // console.log(`目前連線人數 : ${websocketServer._server._connections}`)
       websocketConnection.userid = user
 
-      wsUser.push({ userid: params, ws: websocketConnection })
-
+      wsUser.push({ userid: user, ws: websocketConnection })
       websocketConnection.on('message', async (message) => {
         const msgData = JSON.parse(message)
         // 訊息加入資料庫
@@ -48,11 +47,14 @@ const wsServer = (expressServer) => {
     'connection',
     async (websocketConnection, connectionRequest) => {
       const [_path, params] = connectionRequest?.url?.split('?')
+      const user = params.split('=')[1]
+
       console.log(_path)
+      realtimeWs.push({ userid: user, ws: websocketConnection })
       websocketConnection.on('message', async (message) => {
         const msgData = JSON.parse(message)
 
-        wsUser.forEach((item) => {
+        realtimeWs.forEach((item) => {
           item.ws.send(JSON.stringify(msgData))
         })
       })
