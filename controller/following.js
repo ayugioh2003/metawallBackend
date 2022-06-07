@@ -24,6 +24,9 @@ const getFollowList = catchAsync(async (req, res, next) => {
   }).populate({
     path: 'followings.user',
     select: 'name avatar',
+  }).populate({
+    path: 'followers.user',
+    select: 'name avatar',
   })
 
   successHandle({ res, data: followList })
@@ -62,6 +65,18 @@ const createFollow = catchAsync(async (req, res, next) => {
       runValidators: true,
     },
   )
+  await User.findByIdAndUpdate(
+    {
+      _id: followId,
+    },
+    {
+      $addToSet: { followers: { user: req.user.id } },
+    },
+    {
+      returnDocument: 'after',
+      runValidators: true,
+    },
+  )
   successHandle({ res, message: '追蹤成功', data })
 })
 
@@ -82,6 +97,21 @@ const deleteFollow = catchAsync(async (req, res, next) => {
     {
       $pull: {
         followings: { user: followId },
+      },
+    },
+    {
+      returnDocument: 'after',
+      runValidators: true,
+    },
+  )
+  await User.findByIdAndUpdate(
+    {
+      _id: followId,
+      'followers.user': req.user.id,
+    },
+    {
+      $pull: {
+        followers: { user: req.user.id },
       },
     },
     {

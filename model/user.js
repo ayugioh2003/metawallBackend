@@ -53,6 +53,19 @@ const UserSchema = new mongoose.Schema(
     // 追蹤名單
     followings: [
       {
+        _id: false,
+        user: { type: mongoose.Schema.ObjectId, ref: 'User' },
+        createdAt: {
+          type: Number,
+          default: () => Date.now(),
+        },
+      },
+    ],
+
+    // 被追蹤名單
+    followers: [
+      {
+        _id: false,
         user: { type: mongoose.Schema.ObjectId, ref: 'User' },
         createdAt: {
           type: Number,
