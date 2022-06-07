@@ -19,8 +19,10 @@ const { login } = require('./auth.js')
   取得追蹤者 GET /followers?user_id
 */
 const getFollowList = catchAsync(async (req, res, next) => {
+  const { query } = req
+  const userId = query.user_id ? query.user_id : req.user.id
   const followList = await User.find({
-    _id: req.user.id,
+    _id: userId,
   }).populate({
     path: 'followings.user',
     select: 'name avatar',
@@ -29,6 +31,7 @@ const getFollowList = catchAsync(async (req, res, next) => {
     select: 'name avatar',
   })
 
+  if (followList.length === 0) return next(new AppError(ApiState.DATA_NOT_EXIST))
   successHandle({ res, data: followList })
 })
 
