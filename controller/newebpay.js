@@ -66,6 +66,10 @@ const notify = catchAsync(async (req, res, next) => {
 
 // 取得藍新通知
 const returnURL = catchAsync(async (req, res, next) => {
+  console.log('req.body', req.body)
+  // const tradeInfo = payment.decryptTradeInfo(req.body)
+  // console.log('result', tradeInfo)
+
   const userId = req.query.user_id
   const { comment } = req.query
   const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${comment}`
