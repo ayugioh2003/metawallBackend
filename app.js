@@ -41,6 +41,7 @@ app.use(
 
 app.use(morgan('dev'))
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors(corsOptions))
 
 // Router
