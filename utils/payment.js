@@ -52,7 +52,7 @@ module.exports = {
       Email,
       //
       LoginType: 0,
-      ReturnURL: `${ReturnURL}?user_id=${user_id}&commnet=${Comment}`,
+      ReturnURL: `${ReturnURL}?user_id=${user_id}&comment=${Comment}`,
       NotifyURL,
       ClientBackURL,
       OrderComment: Comment || 'OrderComment',
