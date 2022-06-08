@@ -84,7 +84,7 @@ const returnURL = catchAsync(async (req, res, next) => {
 
   const orderRes = await Order.findOneAndUpdate(
     {
-      MerchantOrderNo: tradeInfo.MerchantOrderNo,
+      MerchantOrderNo: req.query.orderid,
     },
     {
       isPaid: true,
@@ -92,7 +92,7 @@ const returnURL = catchAsync(async (req, res, next) => {
     { returnDocument: 'after', runValidators: true },
   )
   console.log('orderRes', orderRes)
-  const userId = orderRes._id
+  const userId = orderRes.donateTo
   const { comment } = orderRes
 
   const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${comment}`
