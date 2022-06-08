@@ -84,7 +84,7 @@ const returnURL = catchAsync(async (req, res, next) => {
 
   const orderRes = await Order.findOneAndUpdate(
     {
-      MerchantOrderNo: tradeInfo.MerchantOrderNo,
+      MerchantOrderNo: Number(tradeInfo.MerchantOrderNo),
     },
     {
       isPaid: true,
