@@ -44,6 +44,7 @@ const createPayment = catchAsync(async (req, res, next) => {
     Desc: Desc || `給 ${user.name} 的抖內`,
     Comment,
     Email: currentUser.email,
+    user_id,
   })
 
   successHandle({
@@ -65,7 +66,9 @@ const notify = catchAsync(async (req, res, next) => {
 
 // 取得藍新通知
 const returnURL = catchAsync(async (req, res, next) => {
-  const URL = `${process.env.FRONTEND_URL}?returnURL`
+  const userId = req.query.user_id
+  const { comment } = req.query
+  const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${comment}`
   res.redirect(URL)
 })
 
