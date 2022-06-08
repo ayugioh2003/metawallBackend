@@ -41,12 +41,13 @@ module.exports = {
   getTradeInfo: ({
     Amt, Desc, Comment, Email, OrderId = null, user_id,
   }) => {
+    const now = Date.now()
     data = {
       MerchantID,
       RespondType: 'JSON',
       Version: 1.5,
-      TimeStamp: OrderId || Date.now(),
-      MerchantOrderNo: OrderId || Date.now(),
+      TimeStamp: OrderId || now,
+      MerchantOrderNo: OrderId || now,
       Amt,
       ItemDesc: Desc,
       Email,

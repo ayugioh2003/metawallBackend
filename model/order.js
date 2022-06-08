@@ -6,7 +6,34 @@ const validator = require('validator')
  * 訂單模組
 */
 const OrderSchema = new mongoose.Schema({
-
+  // 使用者ID
+  MerchantOrderNo: {
+    type: Number,
+    required: [true, '商店訂單編號為必填'],
+  },
+  // 商品名稱
+  ItemDesc: {
+    type: String,
+    required: [true, '商品名稱為必填'],
+  },
+  // 商店備註
+  Comment: {
+    type: String,
+  },
+  Amt: {
+    type: Number,
+    required: [true, '商品金額為必填'],
+  },
+  donateFrom: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, '付錢老大的ID為必填'],
+  },
+  donateTo: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, '收到錢錢的ID為必填'],
+  },
 })
 
 const Order = mongoose.model(OrderSchema)

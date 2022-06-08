@@ -8,6 +8,7 @@ const ApiState = require('../utils/apiState.js')
 const payment = require('../utils/payment.js')
 // Model
 const User = require('../model/user.js')
+const Order = require('../model/order.js')
 
 dotenv.config({ path: './.env' })
 
@@ -39,13 +40,25 @@ const createPayment = catchAsync(async (req, res, next) => {
   console.log('id', id)
   const currentUser = await User.findById(id).exec()
 
+  const now = Date.now()
   const TradeInfo = payment.getTradeInfo({
     Amt,
     Desc: Desc || `給 ${user.name} 的抖內`,
     Comment,
     Email: currentUser.email,
+    OrderId: now,
     user_id,
   })
+
+  const orderRes = await Order.create({
+    MerchantOrderNo: now,
+    ItemDesc: Desc,
+    Comment,
+    Amt,
+    donateFrom: req.user.id,
+    donateTo: req.body.user_id,
+  })
+  console.log('orderRes', orderRes)
 
   successHandle({
     res,
