@@ -66,7 +66,7 @@ const notify = catchAsync(async (req, res, next) => {
 
 // 取得藍新通知
 const returnURL = catchAsync(async (req, res, next) => {
-  console.log('req.body', req.body)
+  console.log('req.body', JSON.stringify(req.body))
   // const tradeInfo = payment.decryptTradeInfo(req.body)
   // console.log('result', tradeInfo)
 
