@@ -40,7 +40,7 @@ const createPayment = catchAsync(async (req, res, next) => {
   console.log('id', id)
   const currentUser = await User.findById(id).exec()
 
-  const now = Date.now()
+  const now = String(Date.now())
   const TradeInfo = payment.getTradeInfo({
     Amt,
     Desc: Desc || `給 ${user.name} 的抖內`,
@@ -84,7 +84,7 @@ const returnURL = catchAsync(async (req, res, next) => {
 
   const orderRes = await Order.findOneAndUpdate(
     {
-      MerchantOrderNo: Number(tradeInfo.MerchantOrderNo),
+      MerchantOrderNo: tradeInfo.MerchantOrderNo,
     },
     {
       isPaid: true,

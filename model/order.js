@@ -8,7 +8,7 @@ const validator = require('validator')
 const OrderSchema = new mongoose.Schema({
   // 使用者ID
   MerchantOrderNo: {
-    type: Number,
+    type: String,
     required: [true, '商店訂單編號為必填'],
   },
   // 商品名稱

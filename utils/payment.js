@@ -41,7 +41,7 @@ module.exports = {
   getTradeInfo: ({
     Amt, Desc, Comment, Email, OrderId = null, user_id,
   }) => {
-    const now = Date.now()
+    const now = String(Date.now())
     data = {
       MerchantID,
       RespondType: 'JSON',
