@@ -34,6 +34,17 @@ const OrderSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, '收到錢錢的ID為必填'],
   },
+  isPaid: {
+    type: Boolean,
+    default: false,
+  },
+}, {
+  versionKey: false,
+  timestamps: {
+    currentTime: () => Date.now(),
+  },
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
 })
 
 const Order = mongoose.model('Order', OrderSchema)

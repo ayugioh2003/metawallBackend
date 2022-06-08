@@ -83,8 +83,18 @@ const returnURL = catchAsync(async (req, res, next) => {
   const tradeInfo = payment.decryptTradeInfo(req.body.TradeInfo)
   console.log('tradeInfo', tradeInfo)
 
-  const userId = req.query.user_id
-  const { comment } = req.query
+  const orderRes = await Order.findOneAndUpdate(
+    {
+      MerchantOrderNo: tradeInfo.tradeInfo,
+    },
+    {
+      isPaid: true,
+    },
+    { returnDocument: 'after', runValidators: true },
+  ).exec()
+  const userId = orderRes._id
+  const { comment } = orderRes
+
   const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${comment}`
   res.redirect(URL)
 })
