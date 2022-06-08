@@ -93,9 +93,9 @@ const returnURL = catchAsync(async (req, res, next) => {
   )
   console.log('orderRes', orderRes)
   const userId = orderRes.donateTo
-  const { comment } = orderRes
+  const { Comment } = orderRes
 
-  const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${comment}`
+  const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${Comment}`
   res.redirect(URL)
 })
 
