@@ -67,8 +67,8 @@ const notify = catchAsync(async (req, res, next) => {
 // 取得藍新通知
 const returnURL = catchAsync(async (req, res, next) => {
   console.log('req.body', JSON.stringify(req.body))
-  // const tradeInfo = payment.decryptTradeInfo(req.body)
-  // console.log('result', tradeInfo)
+  const tradeInfo = payment.decryptTradeInfo(req.body.TradeInfo)
+  console.log('tradeInfo', tradeInfo)
 
   const userId = req.query.user_id
   const { comment } = req.query
