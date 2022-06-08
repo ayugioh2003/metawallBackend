@@ -79,19 +79,19 @@ const notify = catchAsync(async (req, res, next) => {
 
 // 取得藍新通知
 const returnURL = catchAsync(async (req, res, next) => {
-  console.log('req.body', JSON.stringify(req.body))
   const tradeInfo = payment.decryptTradeInfo(req.body.TradeInfo)
   console.log('tradeInfo', tradeInfo)
 
   const orderRes = await Order.findOneAndUpdate(
     {
-      MerchantOrderNo: tradeInfo.tradeInfo,
+      MerchantOrderNo: tradeInfo.MerchantOrderNo,
     },
     {
       isPaid: true,
     },
     { returnDocument: 'after', runValidators: true },
-  ).exec()
+  )
+  console.log('orderRes', orderRes)
   const userId = orderRes._id
   const { comment } = orderRes
 
