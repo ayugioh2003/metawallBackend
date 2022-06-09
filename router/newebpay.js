@@ -10,7 +10,6 @@ router
 
 router
   .route('/return-url')
-  .get(newebpayController.returnURL)
   .post(newebpayController.returnURL)
 
 module.exports = router

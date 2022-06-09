@@ -7,13 +7,10 @@ const {
   BACKEND_URL, FRONTEND_URL, MERCHANT_ID: MerchantID, HASH_KEY: HashKey, HASH_IV: HashIV,
 } = process.env
 
-const PayGateWay = 'https://ccore.newebpay.com/MPG/mpg_gateway'
-// const ReturnURL = `${FRONTEND_URL}/?from=returnURL`
-const ReturnURL = `${BACKEND_URL}/api/newebpay/return-url`
-const NotifyURL = `${BACKEND_URL}/api/notifyURL`
-// const ReturnURL = URL + '/newebpay/callback?from=ReturnURL'
-// const ClientBackURL = URL + '/orders'
-const ClientBackURL = `${FRONTEND_URL}/?from=clientBackURL`
+const PayGateWay = 'https://ccore.newebpay.com/MPG/mpg_gateway' // 藍新 form post 網址
+const ReturnURL = `${BACKEND_URL}/api/newebpay/return-url` // 交易成功的轉址
+const NotifyURL = `${BACKEND_URL}/api/notifyURL` // 交易成功後呼叫的 API
+const ClientBackURL = `${FRONTEND_URL}/?from=clientBackURL` // 失敗或取消的轉址
 let data
 
 function genDataChain(TradeInfo) {
@@ -39,20 +36,21 @@ function hashTradeInfoSHA(TradeInfo) {
 
 module.exports = {
   getTradeInfo: ({
-    Amt, Desc, Comment, Email, OrderId = null,
+    Amt, Desc, Comment, Email, OrderId = null, user_id,
   }) => {
+    const now = String(Date.now())
     data = {
       MerchantID,
       RespondType: 'JSON',
       Version: 1.5,
-      TimeStamp: OrderId || Date.now(),
-      MerchantOrderNo: OrderId || Date.now(),
+      TimeStamp: OrderId || now,
+      MerchantOrderNo: OrderId || now,
       Amt,
       ItemDesc: Desc,
       Email,
       //
       LoginType: 0,
-      ReturnURL,
+      ReturnURL: `${ReturnURL}?orderid=${OrderId || now}`,
       NotifyURL,
       ClientBackURL,
       OrderComment: Comment || 'OrderComment',

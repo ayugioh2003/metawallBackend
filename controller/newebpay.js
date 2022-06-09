@@ -8,6 +8,7 @@ const ApiState = require('../utils/apiState.js')
 const payment = require('../utils/payment.js')
 // Model
 const User = require('../model/user.js')
+const Order = require('../model/order.js')
 
 dotenv.config({ path: './.env' })
 
@@ -36,14 +37,25 @@ const createPayment = catchAsync(async (req, res, next) => {
 
   // 登入者
   const { id } = req.user
-  console.log('id', id)
   const currentUser = await User.findById(id).exec()
 
+  const now = String(Date.now())
   const TradeInfo = payment.getTradeInfo({
     Amt,
     Desc: Desc || `給 ${user.name} 的抖內`,
     Comment,
     Email: currentUser.email,
+    OrderId: now,
+    user_id,
+  })
+
+  const orderRes = await Order.create({
+    MerchantOrderNo: now,
+    ItemDesc: Desc,
+    Comment,
+    Amt,
+    donateFrom: req.user.id,
+    donateTo: req.body.user_id,
   })
 
   successHandle({
@@ -63,9 +75,31 @@ const notify = catchAsync(async (req, res, next) => {
   })
 })
 
-// 取得藍新通知
+// 取得藍新通知並轉址
 const returnURL = catchAsync(async (req, res, next) => {
-  const URL = `${process.env.FRONTEND_URL}?returnURL`
+  // 驗證有沒有給 req.query.orderid
+  if (!req.query.orderid) {
+    return next(new AppError({
+      message: '缺少 orderid 參數',
+      statusCode: 400,
+    }))
+  }
+
+  // const tradeInfo = payment.decryptTradeInfo(req.body.TradeInfo)
+
+  const orderRes = await Order.findOneAndUpdate(
+    { MerchantOrderNo: req.query.orderid },
+    { isPaid: true },
+    { returnDocument: 'after', runValidators: true },
+  )
+  if (!orderRes) {
+    return next(new AppError({ message: '找不到此訂單', statusCode: 400 }))
+  }
+
+  const userId = orderRes.donateTo
+  const { Comment } = orderRes
+
+  const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${Comment}`
   res.redirect(URL)
 })
 
