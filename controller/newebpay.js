@@ -37,7 +37,6 @@ const createPayment = catchAsync(async (req, res, next) => {
 
   // 登入者
   const { id } = req.user
-  console.log('id', id)
   const currentUser = await User.findById(id).exec()
 
   const now = String(Date.now())
@@ -58,7 +57,6 @@ const createPayment = catchAsync(async (req, res, next) => {
     donateFrom: req.user.id,
     donateTo: req.body.user_id,
   })
-  console.log('orderRes', orderRes)
 
   successHandle({
     res,
