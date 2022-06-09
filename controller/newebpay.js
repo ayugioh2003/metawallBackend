@@ -77,21 +77,27 @@ const notify = catchAsync(async (req, res, next) => {
   })
 })
 
-// 取得藍新通知
+// 取得藍新通知並轉址
 const returnURL = catchAsync(async (req, res, next) => {
-  const tradeInfo = payment.decryptTradeInfo(req.body.TradeInfo)
-  console.log('tradeInfo', tradeInfo)
+  // 驗證有沒有給 req.query.orderid
+  if (!req.query.orderid) {
+    return next(new AppError({
+      message: '缺少 orderid 參數',
+      statusCode: 400,
+    }))
+  }
+
+  // const tradeInfo = payment.decryptTradeInfo(req.body.TradeInfo)
 
   const orderRes = await Order.findOneAndUpdate(
-    {
-      MerchantOrderNo: req.query.orderid,
-    },
-    {
-      isPaid: true,
-    },
+    { MerchantOrderNo: req.query.orderid },
+    { isPaid: true },
     { returnDocument: 'after', runValidators: true },
   )
-  console.log('orderRes', orderRes)
+  if (!orderRes) {
+    return next(new AppError({ message: '找不到此訂單', statusCode: 400 }))
+  }
+
   const userId = orderRes.donateTo
   const { Comment } = orderRes
 

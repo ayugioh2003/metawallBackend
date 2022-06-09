@@ -8,11 +8,8 @@ const {
 } = process.env
 
 const PayGateWay = 'https://ccore.newebpay.com/MPG/mpg_gateway' // 藍新 form post 網址
-// const ReturnURL = `${FRONTEND_URL}/?from=returnURL`
 const ReturnURL = `${BACKEND_URL}/api/newebpay/return-url` // 交易成功的轉址
 const NotifyURL = `${BACKEND_URL}/api/notifyURL` // 交易成功後呼叫的 API
-// const ReturnURL = URL + '/newebpay/callback?from=ReturnURL'
-// const ClientBackURL = URL + '/orders'
 const ClientBackURL = `${FRONTEND_URL}/?from=clientBackURL` // 失敗或取消的轉址
 let data
 
