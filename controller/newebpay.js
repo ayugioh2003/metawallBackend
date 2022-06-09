@@ -97,9 +97,15 @@ const returnURL = catchAsync(async (req, res, next) => {
   }
 
   const userId = orderRes.donateTo
-  const { Comment } = orderRes
+  const { Comment, donateFrom, Amt } = orderRes
 
-  const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${Comment}`
+  const userRes = await User.findById(donateFrom)
+  if (!userRes) {
+    return next(new AppError({ message: '找不到此贊助者', statusCode: 400 }))
+  }
+  const donateName = userRes.name
+
+  const URL = `${process.env.FRONTEND_URL}/userWall/${userId}?from=returnURL&comment=${Comment}&donateFrom=${donateName}&amt=${Amt}`
   res.redirect(URL)
 })
 
